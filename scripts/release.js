@@ -87,7 +87,9 @@ async function main() {
     '--new-version',
     targetVersion,
     '--no-commit-hooks',
-    '--no-git-tag-version'
+    '--no-git-tag-version',
+    '--access',
+    'public'
   ])
 
   // Push to GitHub.
