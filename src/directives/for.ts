@@ -1,7 +1,7 @@
-import { isArray, isObject } from '@vue/shared'
-import { Block } from '../block'
-import { evaluate } from '../eval'
-import { Context, createScopedContext } from '../context'
+import { isArray, isObject } from '../shared';
+import { Block } from '../block';
+import { evaluate } from '../eval';
+import { Context, createScopedContext } from '../context';
 
 const forAliasRE = /([\s\S]*?)\s+(?:in|of)\s+([\s\S]*)/
 const forIteratorRE = /,([^,\}\]]*)(?:,([^,\}\]]*))?$/
@@ -41,11 +41,11 @@ export const _for = (el: Element, exp: string, ctx: Context) => {
 
     let match
     if ((match = valueExp.match(forIteratorRE))) {
-        valueExp = valueExp.replace(forIteratorRE, '').trim()
-        indexExp = match[1].trim()
-        if (match[2]) {
-        objIndexExp = match[2].trim()
-        }
+        valueExp = valueExp.replace(forIteratorRE, '').trim();
+        indexExp = match[1].trim();
+
+        if (match[2]) 
+            objIndexExp = match[2].trim();
     }
 
     if ((match = valueExp.match(destructureRE))) {
@@ -72,7 +72,7 @@ export const _for = (el: Element, exp: string, ctx: Context) => {
         } 
         else if (isObject(source)) {
             let i = 0;
-            
+
             for (const key in source) 
                 ctxs.push(createChildContext(map, source[key], i++, key));            
         }
@@ -80,89 +80,96 @@ export const _for = (el: Element, exp: string, ctx: Context) => {
         return [ctxs, map]
     }
 
-  const createChildContext = (
-    map: KeyToIndexMap,
-    value: any,
-    index: number,
-    objKey?: string
-  ): Context => {
-    const data: any = {}
-    if (destructureBindings) {
-      destructureBindings.forEach(
-        (b, i) => (data[b] = value[isArrayDestructure ? i : b])
-      )
-    } else {
-      data[valueExp] = value
-    }
-    if (objKey) {
-      indexExp && (data[indexExp] = objKey)
-      objIndexExp && (data[objIndexExp] = index)
-    } else {
-      indexExp && (data[indexExp] = index)
-    }
-    const childCtx = createScopedContext(ctx, data)
-    const key = keyExp ? evaluate(childCtx.scope, keyExp) : index
-    map.set(key, index)
-    childCtx.key = key
-    return childCtx
-  }
+    const createChildContext = (
+        map: KeyToIndexMap,
+        value: any,
+        index: number,
+        objKey?: string
+    ): Context => {
+        const data: any = {};
 
-  const mountBlock = (ctx: Context, ref: Node) => {
-    const block = new Block(el, ctx)
-    block.key = ctx.key
-    block.insert(parent, ref)
-    return block
-  }
-
-  ctx.effect(() => {
-    const source = evaluate(ctx.scope, sourceExp)
-    const prevKeyToIndexMap = keyToIndexMap
-    ;[childCtxs, keyToIndexMap] = createChildContexts(source)
-    if (!mounted) {
-      blocks = childCtxs.map((s) => mountBlock(s, anchor))
-      mounted = true
-    } else {
-      for (let i = 0; i < blocks.length; i++) {
-        if (!keyToIndexMap.has(blocks[i].key)) {
-          blocks[i].remove()
-        }
-      }
-      
-      const nextBlocks: Block[] = []
-      let i = childCtxs.length
-      let nextBlock: Block | undefined
-      let prevMovedBlock: Block | undefined
-      while (i--) {
-        const childCtx = childCtxs[i]
-        const oldIndex = prevKeyToIndexMap.get(childCtx.key)
-        let block
-        if (oldIndex == null) {
-          // new
-          block = mountBlock(
-            childCtx,
-            nextBlock ? nextBlock.el : anchor
-          )
+        if (destructureBindings) {
+            destructureBindings.forEach(
+                (b, i) => (data[b] = value[isArrayDestructure ? i : b])
+            )
         } else {
-          // update
-          block = blocks[oldIndex]
-          Object.assign(block.ctx.scope, childCtx.scope)
-          if (oldIndex !== i) {
-            // moved
-            if (
-              blocks[oldIndex + 1] !== nextBlock || 
-              // If the next has moved, it must move too
-              prevMovedBlock === nextBlock
-            ) {
-              prevMovedBlock = block
-              block.insert(parent, nextBlock ? nextBlock.el : anchor)
-            }
-          }
+            data[valueExp] = value
         }
-        nextBlocks.unshift(nextBlock = block)
-      }
-      blocks = nextBlocks
-    }
-  })
 
-  return nextNode
+        if (objKey) {
+            indexExp && (data[indexExp] = objKey);
+            objIndexExp && (data[objIndexExp] = index);
+        } else {
+            indexExp && (data[indexExp] = index);
+        }
+
+        const childCtx = createScopedContext(ctx, data);
+        const key = keyExp ? evaluate(childCtx.scope, keyExp) : index;
+        map.set(key, index);
+        childCtx.key = key;
+        return childCtx;
+    }
+
+    const mountBlock = (ctx: Context, ref: Node) => {
+        const block = new Block(el, ctx);
+        block.key = ctx.key;
+        block.insert(parent, ref);
+        return block;
+    }
+
+    ctx.effect(() => {
+        const source = evaluate(ctx.scope, sourceExp);
+        const prevKeyToIndexMap = keyToIndexMap;
+        ;[childCtxs, keyToIndexMap] = createChildContexts(source);
+
+        if (!mounted) {
+            blocks = childCtxs.map((s) => mountBlock(s, anchor))
+            mounted = true
+        } 
+        else {
+            for (let i = 0; i < blocks.length; i++) {
+                if (!keyToIndexMap.has(blocks[i].key)) {
+                blocks[i].remove()
+                }
+            }
+        
+            const nextBlocks: Block[] = [];
+            let i = childCtxs.length;
+            let nextBlock: Block | undefined;
+            let prevMovedBlock: Block | undefined;
+
+            while (i--) {
+                const childCtx = childCtxs[i];
+                const oldIndex = prevKeyToIndexMap.get(childCtx.key);
+                let block;
+
+                if (oldIndex == null) {
+                    block = mountBlock(
+                        childCtx,
+                        nextBlock ? nextBlock.el : anchor
+                    );
+                } 
+                else {
+                    block = blocks[oldIndex];
+                    Object.assign(block.ctx.scope, childCtx.scope);
+
+                    if (oldIndex !== i) {
+                        if (
+                            blocks[oldIndex + 1] !== nextBlock || 
+                            prevMovedBlock === nextBlock
+                        ) {
+                            prevMovedBlock = block
+                            block.insert(parent, nextBlock ? nextBlock.el : anchor)
+                        }
+                    }
+                }
+
+                nextBlocks.unshift(nextBlock = block)
+            }
+
+            blocks = nextBlocks
+        }
+    });
+
+    return nextNode
 }

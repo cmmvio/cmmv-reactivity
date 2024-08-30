@@ -1,4 +1,4 @@
-import { hyphenate } from '@vue/shared';
+import { hyphenate } from '../shared';
 import { Directive } from '../directive';
 import { nextTick } from '../scheduler';
 

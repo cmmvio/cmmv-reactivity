@@ -1,4 +1,4 @@
-import { isArray, looseEqual, looseIndexOf, toNumber } from '@vue/shared';
+import { isArray, looseEqual, looseIndexOf, toNumber } from '../shared';
 import { Directive } from '../directive';
 
 export const model: Directive<

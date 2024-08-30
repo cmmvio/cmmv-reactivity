@@ -1,4 +1,4 @@
-import { Directive } from '../'
+import { Directive } from '../directive'
 
 export const ref: Directive = ({
   el,

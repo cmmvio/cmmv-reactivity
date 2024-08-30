@@ -5,6 +5,8 @@ import { on } from './directives/on';
 import { text } from './directives/text';
 import { effect } from './directives/effect';
 import { model } from './directives/model';
+import { html } from './directives/html';
+import { show } from './directives/show';
 
 export interface Directive<T = Element> {
     (ctx: DirectiveContext<T>): (() => void) | void 
@@ -25,5 +27,7 @@ export const builtInDirectives: Record<string, Directive<any>> = {
     on,
     text,
     effect,
-    model
+    model,
+    html,
+    show
 }
