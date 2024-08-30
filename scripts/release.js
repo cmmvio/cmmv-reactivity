@@ -1,11 +1,12 @@
-const fs = require('fs')
-const path = require('path')
-const chalk = require('chalk')
-const semver = require('semver')
-const { prompt } = require('enquirer')
-const execa = require('execa')
-const currentVersion = require('../package.json').version
-
+import fs from 'fs'
+import path from 'path'
+import chalk from 'chalk'
+import semver from 'semver'
+import { execa } from 'execa';
+import { cwd } from 'process'
+import enquirer from 'enquirer';
+const { prompt } = enquirer;
+const currentVersion = JSON.parse(fs.readFileSync(path.resolve(cwd(), 'package.json'), "utf-8")).version;
 const versionIncrements = ['patch', 'minor', 'major']
 
 const inc = (i) => semver.inc(currentVersion, i)
@@ -96,7 +97,7 @@ async function main() {
 }
 
 function updatePackage(version) {
-  const pkgPath = path.resolve(path.resolve(__dirname, '..'), 'package.json')
+  const pkgPath = path.resolve(cwd(), 'package.json')
   const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'))
 
   pkg.version = version

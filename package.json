@@ -1,6 +1,6 @@
 {
   "name": "@cmmv/reactivity",
-  "version": "0.0.3",
+  "version": "0.0.2",
   "description": "CMMV frontend script",
   "files": [
     "dist"
@@ -10,6 +10,7 @@
   "jsdelivr": "dist/reactivity.iife.js",
   "module": "./dist/reactivity.js",
   "type": "module",
+  "private": false,
   "exports": {
     ".": {
       "import": "./dist/reactivity.js",
