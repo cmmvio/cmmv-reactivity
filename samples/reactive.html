@@ -1,0 +1,20 @@
+<script type="module">
+    import { createApp, reactive, subscribe } from '../src'
+  
+    const store = reactive({
+        count: 0,
+        inc() {
+            this.count++
+        }
+    })
+
+    createApp({ store }).mount()
+</script>
+  
+<div scope="{ localCount: 0 }">
+    <p>Global {{ store.count }}</p>
+    <button @click="store.inc">increment</button>
+  
+    <p>Local {{ localCount }}</p>
+    <button @click="localCount++">increment</button>
+</div>

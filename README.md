@@ -1,0 +1,3 @@
+# @cmmv/reactivity
+
+This package was created from the [petite-vue](https://github.com/vuejs/petite-vue) project to provide basic context control functions similar to vue.js for the CMMV project frontend. Although it is possible to add a frontend framework to CMMV, we recommend that you use this version as the main one as its performance is much superior to using modular alternatives with complex component management.
