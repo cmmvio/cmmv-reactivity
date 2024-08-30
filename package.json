@@ -2,15 +2,16 @@
 	"name": "@cmmv/reactivity",
 	"version": "0.0.1",
 	"description": "CMMV frontend script",
-	"main": "dist/cmmv.umd.js",
-	"unpkg": "dist/cmmv.iife.js",
-	"jsdelivr": "dist/cmmv.iife.js",
-	"module": "./dist/cmmv.es.js",
+	"files": ["dist"],
+	"main": "dist/reactivity.umd.js",
+	"unpkg": "dist/reactivity.iife.js",
+	"jsdelivr": "dist/reactivity.iife.js",
+	"module": "./dist/reactivity.js",
 	"type": "module",
 	"exports": {
 		".": {
-			"import": "./dist/cmmv.es.js",
-			"require": "./dist/cmmv.umd.js"
+			"import": "./dist/reactivity.js",
+			"require": "./dist/reactivity.umd.js"
 		}
 	},
 	"types": "./dist/types/index.d.ts",
@@ -25,7 +26,9 @@
 		"type": "git",
 		"url": "git+https://github.com/andrehrferreira/cmmv-reactivity.git"
 	},
-	"keywords": ["cmmv"],
+	"keywords": [
+		"cmmv"
+	],
 	"author": "Andre Ferreira",
 	"license": "MIT",
 	"bugs": {
@@ -37,11 +40,17 @@
 		"@types/mocha": "^10.0.7",
 		"@types/node": "^22.5.1",
 		"chai": "^5.1.1",
+		"chalk": "^5.3.0",
+		"conventional-changelog": "^6.0.0",
+		"conventional-changelog-cli": "^5.0.0",
 		"cross-env": "^7.0.3",
+		"enquirer": "^2.4.1",
+		"execa": "^9.3.1",
 		"jsdom": "^25.0.0",
 		"jsdom-global": "^3.0.2",
 		"mocha": "^10.7.3",
 		"prettier": "^3.3.3",
+		"semver": "^7.6.3",
 		"terser": "^5.31.6",
 		"ts-node": "^10.9.2",
 		"tsconfig-paths": "^4.2.0",
