@@ -1,12 +1,7 @@
 const evalCache: Record<string, Function> = Object.create(null);
 
-export const evaluate = (scope: any, exp: string, el?: Node) => {
-    try {
-      return execute(scope, `return(${exp})`, el);
-    } catch (e) {
-      console.error(`Error evaluating expression: ${exp}`, e);
-    }
-}
+export const evaluate = (scope: any, exp: string, el?: Node) =>
+  execute(scope, `return(${exp})`, el)
   
 export const execute = (scope: any, exp: string, el?: Node) => {
     const fn = evalCache[exp] || (evalCache[exp] = toFunction(exp));

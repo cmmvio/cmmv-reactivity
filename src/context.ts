@@ -29,32 +29,29 @@ export function createContext(parent?: Context): Context {
 }
 
 export const createScopedContext = (ctx: Context, data = {}): Context => {
-    const parentScope = ctx.scope
-    const mergedScope = Object.create(parentScope)
-    Object.defineProperties(mergedScope, Object.getOwnPropertyDescriptors(data))
-    mergedScope.$refs = Object.create(parentScope.$refs)
+    const parentScope = ctx.scope;
+    const mergedScope = Object.create(parentScope);
+    Object.defineProperties(mergedScope, Object.getOwnPropertyDescriptors(data));
+    mergedScope.$refs = Object.create(parentScope.$refs);
     
     const reactiveProxy = reactive(
-      new Proxy(mergedScope, {
-        set(target, key, val, receiver) {
-          if (receiver === reactiveProxy && !target.hasOwnProperty(key)) {
-            return Reflect.set(parentScope, key, val)
-          }
-          return Reflect.set(target, key, val, receiver)
-        }
-      })
-    )
+        new Proxy(mergedScope, {
+            set(target, key, val, receiver) {                
+                if (receiver === reactiveProxy && !target.hasOwnProperty(key)) 
+                    return Reflect.set(parentScope, key, val);
+                
+                return Reflect.set(target, key, val, receiver);
+            }
+        })
+    );
   
-    bindContextMethods(reactiveProxy)
-    return {
-      ...ctx,
-      scope: reactiveProxy
-    }
-  }
+    bindContextMethods(reactiveProxy);
+    return { ...ctx, scope: reactiveProxy };
+};
 
 export const bindContextMethods = (scope: Record<string, any>) => {
     for (const key of Object.keys(scope)) {
         if (typeof scope[key] === 'function') 
-            scope[key] = scope[key].bind(scope)
+            scope[key] = scope[key].bind(scope);        
     }
 }

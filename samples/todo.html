@@ -155,7 +155,7 @@
       <label for="toggle-all">Mark all as complete</label>
       <ul class="todo-list">
         <li
-          v-for="todo in filteredTodos"
+          c-for="todo in filteredTodos"
           class="todo"
           :key="todo.id"
           :class="{ completed: todo.completed, editing: todo === editedTodo }"

@@ -1,0 +1,16 @@
+<script type="module">
+	import { createApp } from '../src';
+
+	createApp({ msg: 'content', hide: false }).mount()
+</script>
+
+<div scope c-cloak>
+	<div c-cloak c-show="!hide">{{ msg }}</div>
+	<button @click="hide = !hide">toggle</button>
+</div>
+
+<style>
+    [c-cloak] {
+      display: none;
+    }
+</style>

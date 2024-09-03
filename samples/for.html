@@ -24,14 +24,14 @@
     <button @click="list.pop()">pop</button>
     <button @click="splice">splice</button>
     <ul>
-      <li for="({ id, text }, index) in list" :key="id">
+      <li c-for="({ id, text }, index) in list" :key="id">
         <div>{{ index }} {{ { id, text } }}</div>
       </li>
     </ul>
   
     <ul>
-      <li for="item of list" :key="item.id">
-        <input model="item.text" />
+      <li c-for="item of list" :key="item.id">
+        <input c-model="item.text" />
       </li>
     </ul>
 </div>

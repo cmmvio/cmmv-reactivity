@@ -1,0 +1,10 @@
+<script type="module">
+	import { createApp } from '../src'
+	createApp().mount()
+</script>
+
+<div scope="{ count: 0 }">
+	<p>{{ count }}</p>
+	<p c-pre> {{ count }}</p>
+	<button @click="count++">increment</button>
+</div>

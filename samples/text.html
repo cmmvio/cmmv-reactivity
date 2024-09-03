@@ -1,0 +1,10 @@
+<script type="module">
+  import { createApp } from '../src'
+  createApp().mount()
+</script>
+
+<div scope="{ count: 1 }">
+	<p v-text="count"></p>
+	<button @click="count++">increase</button>
+</div>
+

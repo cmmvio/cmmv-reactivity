@@ -9,6 +9,7 @@ import { bind } from './directives/bind';
 import { on } from './directives/on';
 
 const dirRE = /^(c-|:|@)/;
+const dirREVue = /^(v-|:|@)/;
 const modifierRE = /\.([\w-]+)/g;
 
 export let inOnce = false;
@@ -17,39 +18,31 @@ export const walk = (node: Node, ctx: Context): ChildNode | null | void => {
     const nodeType = node.nodeType;
 
     switch (nodeType) {
-        case 1: // Element
-            processElementNode(node as Element, ctx);
-            break;
-        case 3: // Text
-            processTextNode(node as Text, ctx);
-            break;
-        case 11: // DocumentFragment
-            walkChildren(node as DocumentFragment, ctx);
-            break;
+        case 1: processElementNode(node as Element, ctx); break;
+        case 3: processTextNode(node as Text, ctx); break;
+        case 11: walkChildren(node as DocumentFragment, ctx); break;
     }
 }
 
 const processElementNode = (el: Element, ctx: Context): void | ChildNode | null => {
     if (el.hasAttribute('pre')) return;
 
-    checkAndRemoveAttr(el, 'cloak');
+    checkAndRemoveAttr(el, 'c-cloak');
 
     let exp: string | null;
 
-    if ((exp = checkAndRemoveAttr(el, 'if') || checkAndRemoveAttr(el, 'v-if'))) {
+    if ((exp = checkAndRemoveAttr(el, 'c-if') || checkAndRemoveAttr(el, 'v-if'))) 
         return _if(el, exp, ctx);
-    }
 
-    if ((exp = checkAndRemoveAttr(el, 'for') || checkAndRemoveAttr(el, 'v-for'))) {
+    if ((exp = checkAndRemoveAttr(el, 'c-for') || checkAndRemoveAttr(el, 'v-for'))) 
         return _for(el, exp, ctx);
-    }
-
+    
     if ((exp = checkAndRemoveAttr(el, 'scope') || checkAndRemoveAttr(el, 'v-scope')) !== null || exp === '') {
         const scope = exp ? evaluate(ctx.scope, exp) : {};
         ctx = createScopedContext(ctx, scope);
-        if (scope.$template) {
+
+        if (scope.$template) 
             resolveTemplate(el, scope.$template)
-        }
     }
 
     const hasVOnce = checkAndRemoveAttr(el, 'once') !== null || checkAndRemoveAttr(el, 'v-once') !== null;
@@ -79,10 +72,9 @@ const processTextNode = (node: Text, ctx: Context): void => {
             lastIndex = match.index + match[0].length;
         }
 
-        if (lastIndex < data.length) {
+        if (lastIndex < data.length) 
             segments.push(JSON.stringify(data.slice(lastIndex)));
-        }
-
+        
         applyDirective(node, text, segments.join('+'), ctx);
     }
 }
@@ -125,8 +117,8 @@ const processElementDirectives = (el: Element, ctx: Context): void => {
     const deferred: [string, string][] = [];
 
     for (const { name, value } of Array.from(el.attributes)) {
-        if (dirRE.test(name)) {
-            if (name === 'model' || name === 'v-model') {
+        if (dirRE.test(name) || dirREVue.test(name)) {
+            if (name === 'model' || name === 'c-model' || name === 'v-model') {
                 deferred.unshift([name, value]);
             } else if (name.startsWith('@') || /^on\b/.test(name) || /^v-on\b/.test(name)) {
                 deferred.push([name, value]);
@@ -156,10 +148,7 @@ const applyDirectiveBasedOnName = (
         return '';
     });
 
-    if (raw === 'model' || raw === 'v-model') {
-        dir = builtInDirectives['model'] || ctx.dirs['model'];
-    }
-    else if (raw[0] === ':') {
+    if (raw[0] === ':') {
         dir = bind;
         arg = raw.slice(1);
     } else if (raw[0] === '@') {
@@ -182,14 +171,17 @@ const applyDirectiveBasedOnName = (
 
 const resolveTemplate = (el: Element, template: string) => {
     if (template[0] === '#') {
-      const templateEl = document.querySelector(template)
-      if (import.meta.env.DEV && !templateEl) {
-        console.error(
-          `template selector ${template} has no matching <template> element.`
-        )
-      }
-      el.appendChild((templateEl as HTMLTemplateElement).content.cloneNode(true))
-      return
+        const templateEl = document.querySelector(template);
+
+        if (import.meta.env.DEV && !templateEl) {
+            console.error(
+            `template selector ${template} has no matching <template> element.`
+            )
+        }
+
+        el.appendChild((templateEl as HTMLTemplateElement).content.cloneNode(true));
+
+        return;
     }
     el.innerHTML = template
 }
