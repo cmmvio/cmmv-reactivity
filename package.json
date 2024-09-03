@@ -1,63 +1,63 @@
 {
-  "name": "@cmmv/reactivity",
-  "version": "0.0.2",
-  "description": "CMMV frontend script",
-  "files": [
-    "dist"
-  ],
-  "main": "dist/reactivity.umd.js",
-  "unpkg": "dist/reactivity.iife.js",
-  "jsdelivr": "dist/reactivity.iife.js",
-  "module": "./dist/reactivity.js",
-  "type": "module",
-  "private": false,
-  "exports": {
-    ".": {
-      "import": "./dist/reactivity.js",
-      "require": "./dist/reactivity.umd.js"
+    "name": "@cmmv/reactivity",
+    "version": "0.0.3",
+    "description": "CMMV frontend script",
+    "files": [
+        "dist"
+    ],
+    "main": "dist/reactivity.umd.js",
+    "unpkg": "dist/reactivity.iife.js",
+    "jsdelivr": "dist/reactivity.iife.js",
+    "module": "./dist/reactivity.js",
+    "type": "module",
+    "private": false,
+    "exports": {
+        ".": {
+            "import": "./dist/reactivity.js",
+            "require": "./dist/reactivity.umd.js"
+        }
+    },
+    "types": "./dist/types/index.d.ts",
+    "scripts": {
+        "dev": "vite",
+        "test": "mocha",
+        "build": "vite build && tsc --emitDeclarationOnly && mv dist/src dist/types",
+        "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
+        "release": "node scripts/release.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/andrehrferreira/cmmv-reactivity.git"
+    },
+    "keywords": [
+        "cmmv"
+    ],
+    "author": "Andre Ferreira",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/andrehrferreira/cmmv-reactivity/issues"
+    },
+    "homepage": "https://github.com/andrehrferreira/cmmv-reactivity#readme",
+    "devDependencies": {
+        "@types/chai": "^4.3.19",
+        "@types/mocha": "^10.0.7",
+        "@types/node": "^22.5.1",
+        "chai": "^5.1.1",
+        "chalk": "^5.3.0",
+        "conventional-changelog": "^6.0.0",
+        "conventional-changelog-cli": "^5.0.0",
+        "cross-env": "^7.0.3",
+        "enquirer": "^2.4.1",
+        "execa": "^9.3.1",
+        "jsdom": "^25.0.0",
+        "jsdom-global": "^3.0.2",
+        "mocha": "^10.7.3",
+        "prettier": "^3.3.3",
+        "semver": "^7.6.3",
+        "terser": "^5.31.6",
+        "ts-node": "^10.9.2",
+        "tsconfig-paths": "^4.2.0",
+        "typescript": "^5.5.4",
+        "vite": "^5.4.2"
     }
-  },
-  "types": "./dist/types/index.d.ts",
-  "scripts": {
-    "dev": "vite",
-    "test": "mocha",
-    "build": "vite build && tsc --emitDeclarationOnly && mv dist/src dist/types",
-    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
-    "release": "node scripts/release.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/andrehrferreira/cmmv-reactivity.git"
-  },
-  "keywords": [
-    "cmmv"
-  ],
-  "author": "Andre Ferreira",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/andrehrferreira/cmmv-reactivity/issues"
-  },
-  "homepage": "https://github.com/andrehrferreira/cmmv-reactivity#readme",
-  "devDependencies": {
-    "@types/chai": "^4.3.19",
-    "@types/mocha": "^10.0.7",
-    "@types/node": "^22.5.1",
-    "chai": "^5.1.1",
-    "chalk": "^5.3.0",
-    "conventional-changelog": "^6.0.0",
-    "conventional-changelog-cli": "^5.0.0",
-    "cross-env": "^7.0.3",
-    "enquirer": "^2.4.1",
-    "execa": "^9.3.1",
-    "jsdom": "^25.0.0",
-    "jsdom-global": "^3.0.2",
-    "mocha": "^10.7.3",
-    "prettier": "^3.3.3",
-    "semver": "^7.6.3",
-    "terser": "^5.31.6",
-    "ts-node": "^10.9.2",
-    "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.5.4",
-    "vite": "^5.4.2"
-  }
 }
