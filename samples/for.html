@@ -1,25 +1,28 @@
 <script type="module">
     import { createApp, reactive } from '../src'
 
-    createApp({
-        count: 2,
+    const store = reactive({
+        count: 0,
         items: [
             { name: "test", index: 1 },
             { name: "test2", index: 2 }
         ],
-        add() {
-            console.log('aki')
+        inc() {
             this.count++;
             this.items.push({ name: `test${this.count}`, index: this.count })
             console.log(this.items);
         }
-    }).mount();
+    });
+
+    createApp({ store }).mount();
 </script>
   
 <div scope>
-    <div for="item in items">
-        <label>{{ item.name }}</label>
+    <div for="item in store.items">
+        {{ item.name }}
     </div>
 
-    <button @click="add">Add</button>
+    <label>total: {{ store.count }}</label>
+
+    <button @click="store.inc">Add</button>
 </div>

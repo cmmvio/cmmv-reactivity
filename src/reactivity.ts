@@ -27,6 +27,7 @@ function track(target: any, key: any) {
 }
 
 function trigger(target: any, key: any) {
+    console.log(`Triggering updates for key: ${key}`, target[key]);
     const depsMap = targetMap.get(target);
 
     if (!depsMap) return;
@@ -63,18 +64,21 @@ export function reactive<T extends object>(target: T): any {
         },
 
         set(target, key, value, receiver) {
+            if (typeof value === 'function' || typeof value === 'object') {
+                console.log(`Setting function or object key: ${key}`);
+            } else {
+                console.log(`Setting primitive key: ${key}`);
+            }
+        
             const oldValue = target[key as keyof T];
-            
-            if (typeof value === 'function') 
-                return Reflect.set(target, key, value.bind(receiver), receiver);
-                    
             const result = Reflect.set(target, key, value, receiver);
         
             if (oldValue !== value) 
                 trigger(target, key);
             
             return result;
-        }        
+        }
+                
     });
 
     return proxy;

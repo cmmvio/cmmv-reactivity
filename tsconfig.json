@@ -1,5 +1,5 @@
 {
-    "compilerOptions": {
+    "compilerOptions": {        
         "baseUrl": ".",
         "outDir": "dist",
         "declaration": true,
@@ -8,8 +8,10 @@
         "module": "esnext",
         "moduleResolution": "node",
         "allowJs": false,
-        "strict": true,
+        "strict": false,
         "noUnusedLocals": false,
+        "noImplicitAny": false,
+        "noImplicitThis": false,
         "rootDir": ".",
         "types": ["vite/client"]
     },
