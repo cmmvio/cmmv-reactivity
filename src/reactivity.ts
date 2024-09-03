@@ -33,42 +33,67 @@ function trigger(target: any, key: any) {
 
     const dep = depsMap.get(key);
 
-    if (dep) 
-        dep.forEach((effect) => effect());    
+    if (dep) {
+        dep.forEach((effect) => {
+            if (effect !== activeEffect) {
+                effect();
+            }
+        });
+    }
 
     const subMap = subscribeMap.get(target);
-    
     if (subMap) {
         const subs = subMap.get(key);
-
-        if (subs) 
+        if (subs) {
             subs.forEach(sub => sub(target[key], target[key])); 
+        }
     }
 }
 
-export function reactive<T extends object>(target: T): T {
-    return new Proxy(target, {
+export function reactive<T extends object>(target: T): any {
+    const proxy = new Proxy(target, {
         get(target, key, receiver) {
             const result = Reflect.get(target, key, receiver);
+
+            if (typeof result === 'function') 
+                return result.bind(receiver); 
+            
             track(target, key);
             return (typeof result === 'object' && result !== null) ? reactive(result) : result;
         },
 
         set(target, key, value, receiver) {
             const oldValue = target[key as keyof T];
+            
+            if (typeof value === 'function') 
+                return Reflect.set(target, key, value.bind(receiver), receiver);
+                    
             const result = Reflect.set(target, key, value, receiver);
-
+        
             if (oldValue !== value) 
                 trigger(target, key);
             
             return result;
-        }
+        }        
     });
+
+    return proxy;
 }
 
 export function effect(fn: EffectFn) {
-    activeEffect = fn;
-    fn();
+    let executingEffect = false;
+
+    activeEffect = () => {
+        if (!executingEffect) {
+            executingEffect = true;
+            try {
+                fn();
+            } finally {
+                executingEffect = false;
+            }
+        }
+    };
+    activeEffect();
     activeEffect = null;
 }
 

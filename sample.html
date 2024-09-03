@@ -1,0 +1,9 @@
+<script type="module">
+    import { createApp } from 'https://unpkg.com/@cmmv/reactivity@0.0.2/dist/reactivity.js'
+    createApp().mount()
+  </script>
+
+<div scope="{ count: 0 }">
+  {{ count }}
+  <button @click="count++">inc</button>
+</div>

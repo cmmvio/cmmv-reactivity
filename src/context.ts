@@ -30,9 +30,9 @@ export function createContext(parent?: Context): Context {
 
 export const createScopedContext = (ctx: Context, data = {}): Context => {
     const parentScope = ctx.scope || {};
-    const mergedScope = Object.create(parentScope)
-    Object.defineProperties(mergedScope, Object.getOwnPropertyDescriptors(data))
-    mergedScope.$refs = Object.create(parentScope.$refs || {})
+    const mergedScope = Object.create(parentScope);
+    Object.defineProperties(mergedScope, Object.getOwnPropertyDescriptors(data));
+    mergedScope.$refs = Object.create(parentScope.$refs || {});
 
     if(!mergedScope.$refs)
         mergedScope.$refs = {};
@@ -41,15 +41,15 @@ export const createScopedContext = (ctx: Context, data = {}): Context => {
         new Proxy(mergedScope, {
             set(target, key, val, receiver) {
                 if (receiver === reactiveProxy && !target.hasOwnProperty(key)) 
-                    return Reflect.set(parentScope, key, val)
+                    return Reflect.set(parentScope, key, val);
             
-                return Reflect.set(target, key, val, receiver)
+                return Reflect.set(target, key, val, receiver);
             }
         })
-    )
+    );
   
     bindContextMethods(reactiveProxy);
-    return { ...ctx, scope: reactiveProxy }
+    return { ...ctx, scope: reactiveProxy };
 }
 
 export const bindContextMethods = (scope: Record<string, any>) => {

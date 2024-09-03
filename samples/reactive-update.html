@@ -1,0 +1,21 @@
+<script type="module">
+    import { createApp, reactive, subscribe } from '../src'
+  
+    const store = reactive({
+        count: 0,
+        inc() {
+            this.count++
+        }
+    });
+
+    store.count = 1;
+
+    createApp({ store }).mount();    
+
+    store.count = 2;
+</script>
+  
+<div>
+    <p>Global {{ store.count }}</p>
+    <button @click="store.inc">increment</button>
+</div>
