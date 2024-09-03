@@ -156,7 +156,10 @@ const applyDirectiveBasedOnName = (
         return '';
     });
 
-    if (raw[0] === ':') {
+    if (raw === 'model' || raw === 'v-model') {
+        dir = builtInDirectives['model'] || ctx.dirs['model'];
+    }
+    else if (raw[0] === ':') {
         dir = bind;
         arg = raw.slice(1);
     } else if (raw[0] === '@') {

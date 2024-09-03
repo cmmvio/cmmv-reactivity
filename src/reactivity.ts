@@ -56,6 +56,19 @@ export function reactive<T extends object>(target: T): any {
         get(target, key, receiver) {
             const result = Reflect.get(target, key, receiver);
 
+            if (Array.isArray(result)) {
+                ['push', 'pop', 'shift', 'unshift', 'splice', 'sort', 'reverse'].forEach(method => {
+                    if (typeof result[method] === 'function') {
+                        result[method] = function (...args: any[]) {
+                            const original = Array.prototype[method];
+                            const ret = original.apply(this, args);
+                            trigger(target, key);
+                            return ret;
+                        };
+                    }
+                });
+            }
+
             if (typeof result === 'function') 
                 return result.bind(receiver); 
             
@@ -78,11 +91,11 @@ export function reactive<T extends object>(target: T): any {
             
             return result;
         }
-                
     });
 
     return proxy;
 }
+
 
 export function effect(fn: EffectFn) {
     let executingEffect = false;
