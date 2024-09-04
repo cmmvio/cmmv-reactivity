@@ -59,5 +59,8 @@
         "tsconfig-paths": "^4.2.0",
         "typescript": "^5.5.4",
         "vite": "^5.4.2"
+    },
+    "dependencies": {
+        "@vue/reactivity": "^3.5.1"
     }
 }
