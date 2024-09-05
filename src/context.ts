@@ -1,12 +1,20 @@
+import {
+    effect as rawEffect,
+    reactive,
+    ReactiveEffectRunner
+} from '@vue/reactivity'
+
 import { Block } from "./block";
 import { Directive } from "./directive"
-import { reactive, effect as rawEffect } from "./reactivity";
+import { queueJob } from './scheduler'
+import { inOnce } from './walk'
 
 export interface Context {
     key?: any
     delimiters: [string, string]
     delimitersRE: RegExp
     effect: typeof rawEffect
+    effects: ReactiveEffectRunner[]
     scope: Record<string, any>
     dirs: Record<string, Directive>
     blocks: Block[],
@@ -20,9 +28,20 @@ export function createContext(parent?: Context): Context {
         ...parent,
         scope: parent ? parent.scope : reactive({}),
         dirs: parent ? parent.dirs : {},
-        effect: (fn) => rawEffect(fn),
+        effects: [],
         blocks: [],
         cleanups: [],
+        effect: (fn) => {
+            if (inOnce) {
+              queueJob(fn)
+              return fn as any
+            }
+            const e: ReactiveEffectRunner = rawEffect(fn, {
+              scheduler: () => queueJob(e)
+            })
+            ctx.effects.push(e)
+            return e
+        }
     };
 
     return ctx;
@@ -36,8 +55,8 @@ export const createScopedContext = (ctx: Context, data = {}): Context => {
     
     const reactiveProxy = reactive(
         new Proxy(mergedScope, {
-            set(target, key, val, receiver) {                
-                if (receiver === reactiveProxy && !target.hasOwnProperty(key)) 
+            set(target, key, val, receiver) {
+                if (receiver === reactiveProxy && !Object.prototype.hasOwnProperty.call(target, key)) 
                     return Reflect.set(parentScope, key, val);
                 
                 return Reflect.set(target, key, val, receiver);
@@ -51,7 +70,10 @@ export const createScopedContext = (ctx: Context, data = {}): Context => {
 
 export const bindContextMethods = (scope: Record<string, any>) => {
     for (const key of Object.keys(scope)) {
-        if (typeof scope[key] === 'function') 
-            scope[key] = scope[key].bind(scope);        
+        if (typeof scope[key] === 'function') {
+            console.log(scope, key, scope[key])
+            scope[key] = scope[key].bind(scope);  
+        }
+                  
     }
 }

@@ -1,5 +1,5 @@
 import { Context } from "./context";
-import { effect as rawEffect } from "./reactivity";
+import { effect as rawEffect } from "@vue/reactivity";
 import { bind } from './directives/bind';
 import { on } from './directives/on';
 import { text } from './directives/text';

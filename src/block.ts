@@ -1,5 +1,13 @@
 import { Context, createContext } from "./context";
 import { walk } from "./walk";
+import { stop } from '@vue/reactivity';
+
+export const remove = <T>(arr: T[], el: T): void => {
+    const i = arr.indexOf(el);
+    
+    if (i > -1) 
+      arr.splice(i, 1)
+}
 
 export class Block {
     template: Element | DocumentFragment
@@ -62,8 +70,8 @@ export class Block {
     }
 
     remove() {
-        //if (this.parentCtx) 
-        //  remove(this.parentCtx.blocks, this)
+        if (this.parentCtx) 
+            remove(this.parentCtx.blocks, this)
         
         if (this.start) {
           const parent = this.start.parentNode!
@@ -87,7 +95,7 @@ export class Block {
         this.ctx.blocks.forEach((child) => {
           child.teardown()
         });
-
+        this.ctx.effects.forEach(stop)
 		this.ctx.cleanups.forEach((fn) => fn());
     }
 }

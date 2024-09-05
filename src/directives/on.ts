@@ -7,6 +7,8 @@ const simplePathRE =
 
 const systemModifiers = ['ctrl', 'shift', 'alt', 'meta']
 
+let isProcessing = false;
+
 type KeyedEvent = KeyboardEvent | MouseEvent | TouchEvent
 
 const modifierGuards: Record<
@@ -51,6 +53,7 @@ export const on: Directive = ({ el, get, exp, arg, modifiers }) => {
         const raw = handler;
 
         handler = (e: Event) => {
+            
             if ('key' in e && !(hyphenate((e as KeyboardEvent).key) in modifiers)) 
                 return
             

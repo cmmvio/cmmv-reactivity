@@ -1,7 +1,8 @@
+import { reactive } from "@vue/reactivity";
+
 import { Block } from "./block";
 import { bindContextMethods, createContext } from "./context";
 import { toDisplayString } from './directives/text'
-import { reactive } from "./reactivity";
 import { nextTick } from "./scheduler";
 
 export const createApp = (initialData?: any) => {

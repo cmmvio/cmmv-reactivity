@@ -15,7 +15,7 @@ export const execute = (scope: any, exp: string, el?: Node) => {
   
 export const toFunction = (exp: string): Function => {
     try {
-        return new Function(`$data`, `$el`, `with($data){${exp}}`);
+        return new Function(`$data`, `$el`, `with($data){${exp}}`);//apply
     } catch (e) {
         console.error(`Error creating function from expression: ${exp}`, e);
         return () => {};

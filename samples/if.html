@@ -4,10 +4,10 @@
   createApp().mount('#app')
 </script>
 
-<div id="app" scope="{ open: true, elseOpen: true }">
-  <button @click="open = !open">toggle</button>
+<div id="app" scope="{ opened: true, elseOpen: true }">
+  <button @click="opened = !opened">toggle</button>
   <button @click="elseOpen = !elseOpen">toggle else</button>
-  <div c-if="open">ok</div>
+  <div c-if="opened">ok</div>
   <div c-else-if="elseOpen">else if</div>
   <template c-else>else</template>
 </div>
