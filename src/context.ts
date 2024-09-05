@@ -70,10 +70,7 @@ export const createScopedContext = (ctx: Context, data = {}): Context => {
 
 export const bindContextMethods = (scope: Record<string, any>) => {
     for (const key of Object.keys(scope)) {
-        if (typeof scope[key] === 'function') {
-            console.log(scope, key, scope[key])
-            scope[key] = scope[key].bind(scope);  
-        }
-                  
+        if (typeof scope[key] === 'function') 
+            scope[key] = scope[key].bind(scope);    
     }
 }
