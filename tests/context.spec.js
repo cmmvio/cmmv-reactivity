@@ -30,6 +30,7 @@ describe('createContext', () => {
         parentContext.scope.parentProp = 'parentValue';
 
         const scopedContext = createScopedContext(parentContext, { childProp: 'childValue' });
+        console.log(scopedContext);
 
         expect(scopedContext.scope.parentProp).to.equal('parentValue');
         expect(scopedContext.scope.childProp).to.equal('childValue');

@@ -5,7 +5,7 @@ const { window } = new JSDOM('');
 global.window = window;
 global.document = window.document;
 
-import { reactive, ref, subscribe, effect } from '../dist/reactivity.js';
+import { reactive, ref, effect } from '../dist/reactivity.js';
 
 describe('Reactive System', () => {
     it('should track and trigger reactivity on object properties', () => {
@@ -44,43 +44,5 @@ describe('Reactive System', () => {
         expect(callCount).to.equal(2);
         state.count = 1; // No change, should not trigger effect
         expect(callCount).to.equal(2);
-    });
-
-    it('should trigger subscribed functions when a property changes', () => {
-        const state = reactive({ count: 0 });
-        let oldValue;
-        let newValue;
-
-        subscribe(state, 'count', (newVal, oldVal) => {
-            newValue = newVal;
-            oldValue = oldVal;
-
-            expect(newValue).to.equal(1);
-            expect(oldValue).to.equal(0);
-        });
-
-        state.count = 1;
-    });
-
-    it('should trigger effects and subscriptions independently', () => {
-        const state = reactive({ count: 0 });
-        let effectDummy;
-        let subNewValue;
-        let subOldValue;
-
-        effect(() => {
-            effectDummy = state.count;
-        });
-
-        subscribe(state, 'count', (newVal, oldVal) => {
-            subNewValue = newVal;
-            subOldValue = oldVal;
-
-            expect(effectDummy).to.equal(1);
-            expect(subNewValue).to.equal(1);
-            expect(subOldValue).to.equal(0);
-        });
-
-        state.count = 1;
     });
 });

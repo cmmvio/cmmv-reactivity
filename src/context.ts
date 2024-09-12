@@ -51,7 +51,7 @@ export const createScopedContext = (ctx: Context, data = {}): Context => {
     const parentScope = ctx.scope;
     const mergedScope = Object.create(parentScope);
     Object.defineProperties(mergedScope, Object.getOwnPropertyDescriptors(data));
-    mergedScope.$refs = Object.create(parentScope.$refs);
+    mergedScope.$refs = Object.create(parentScope.$refs || {});
     
     const reactiveProxy = reactive(
         new Proxy(mergedScope, {
