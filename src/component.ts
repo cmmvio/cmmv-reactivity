@@ -139,6 +139,7 @@ export function mountComponent(ctx: Context, el: Element, componentName: string,
         if(ctx.scope && ctx.scope.data && typeof ctx.scope.data === "function")
             componentInstance["$scope"] = ctx.scope.data();
         
+        componentInstance["$style"] = ctx.scope.$style || {};
         componentInstance["$root"] = rootEl;
 
         const attrs = Array.from(originalEl.attributes);
