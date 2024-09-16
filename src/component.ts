@@ -42,13 +42,15 @@ export function mountComponent(ctx: Context, el: Element, componentName: string,
             }
         });
 
-        Object.keys(propsDefinition).forEach(key => {
-            if (!(key in props)) {
-                props[key] = propsDefinition[key]?.defaultValue;
-                if (props[key] === undefined) props[key] = null;
-            }
-        });
-
+        if(propsDefinition){
+            Object.keys(propsDefinition).forEach(key => {
+                if (!(key in props)) {
+                    props[key] = propsDefinition[key]?.defaultValue;
+                    if (props[key] === undefined) props[key] = null;
+                }
+            });
+        }
+        
         return props;
     };
 
