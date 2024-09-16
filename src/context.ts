@@ -18,7 +18,8 @@ export interface Context {
     scope: Record<string, any>
     dirs: Record<string, Directive>
     blocks: Block[],
-    cleanups: (() => void)[]
+    cleanups: (() => void)[],
+    components: {},
 }
 
 export function createContext(parent?: Context): Context {
@@ -31,6 +32,7 @@ export function createContext(parent?: Context): Context {
         effects: [],
         blocks: [],
         cleanups: [],
+        components: {},
         effect: (fn) => {
             if (inOnce) {
               queueJob(fn)

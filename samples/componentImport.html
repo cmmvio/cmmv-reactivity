@@ -1,0 +1,27 @@
+<div scope>
+    <ComponentTemplate ref="comp" :count="test"></ComponentTemplate>
+
+    <ComponentTemplate></ComponentTemplate>
+
+    <hr/>
+    
+    <div>
+        Root: {{ test }}<br/>
+        Component Ctx: {{ $refs.comp.count }}
+    </div>
+</div>
+
+<script type="module">
+import { createApp } from '../src';
+import ComponentTemplate from './componentTemplate.cmmv';
+
+createApp({
+    components: { ComponentTemplate },
+
+    data(){
+        return {
+            test: 123
+        }
+    }
+}).mount();
+</script>

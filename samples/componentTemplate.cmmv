@@ -1,0 +1,38 @@
+<template>
+    <div>{{ count }}</div>
+
+    <button @click="addCount()" class="btnAdd">Add</button>
+    <slot :count="count" />
+</template>
+
+<style scoped>
+.btnAdd{
+    border: 1px solid #CCC;
+}
+</style>
+
+<script>
+export default {
+    props: {
+        count: {
+            type: Number,
+            defaultValue: 0
+        }
+    },
+
+    created(){
+        //console.log("created")
+    },
+
+    mounted(){
+        //console.log("mounted")
+    },
+
+    methods: {
+        addCount(){
+            this.count++;
+            this.emit("count", this.count)
+        }
+    }
+}
+</script>
