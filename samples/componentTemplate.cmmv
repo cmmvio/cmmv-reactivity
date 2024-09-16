@@ -20,6 +20,12 @@ export default {
         }
     },
 
+    data(){
+        return {
+            teste: ""
+        }
+    },
+
     created(){
         //console.log("created")
     },
