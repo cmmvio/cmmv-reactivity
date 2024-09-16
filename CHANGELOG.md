@@ -1,3 +1,9 @@
+## [0.1.1](https://github.com/andrehrferreira/cmmv-reactivity/compare/v0.1.0...v0.1.1) (2024-09-16)
+
+### Features
+
+-   component ([0d21c34](https://github.com/andrehrferreira/cmmv-reactivity/commit/0d21c344a435fe7ba6bdef6a07c61d62d70ba573))
+
 # [0.1.0](https://github.com/andrehrferreira/cmmv-reactivity/compare/v0.0.9...v0.1.0) (2024-09-12)
 
 ### Bug Fixes
