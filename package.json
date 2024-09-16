@@ -1,6 +1,6 @@
 {
     "name": "@cmmv/reactivity",
-    "version": "0.1.4",
+    "version": "0.1.5",
     "description": "CMMV frontend script",
     "files": [
         "dist"
