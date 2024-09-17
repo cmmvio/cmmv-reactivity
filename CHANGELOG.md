@@ -1,3 +1,9 @@
+# [0.2.0](https://github.com/andrehrferreira/cmmv-reactivity/compare/v0.1.8...v0.2.0) (2024-09-17)
+
+### Bug Fixes
+
+-   props ([570399f](https://github.com/andrehrferreira/cmmv-reactivity/commit/570399f0966aed02338e83ff5478011fd00fb628))
+
 ## [0.1.8](https://github.com/andrehrferreira/cmmv-reactivity/compare/v0.1.7...v0.1.8) (2024-09-16)
 
 ## [0.1.7](https://github.com/andrehrferreira/cmmv-reactivity/compare/v0.1.6...v0.1.7) (2024-09-16)
