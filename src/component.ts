@@ -77,7 +77,7 @@ export function mountComponent(ctx: Context, el: Element, componentName: string,
     const data = (typeof Component.data === "function") ? reactive(Component.data())  : {};
     const slots = {};
 
-    el.querySelectorAll('template[v-slot], template[c-slot]').forEach((slotEl: HTMLTemplateElement) => {
+    el.querySelectorAll('template[v-slot], template[c-slot], template').forEach((slotEl: HTMLTemplateElement) => {
         const slotScope = slotEl.getAttribute('v-slot') || slotEl.getAttribute('c-slot');
         const slotName = slotEl.getAttribute('name') || "default";
         slots[slotName] = { html: slotEl.innerHTML, scope: slotScope };
@@ -129,9 +129,9 @@ export function mountComponent(ctx: Context, el: Element, componentName: string,
             if (data.slots[slotName]) {
                 const templateSlot = document.createElement('div');
                 templateSlot.innerHTML = data.slots[slotName].html;  
-                
+
                 renderedTemplate = renderedTemplate
-                    .replace(slot.outerHTML.replace("></slot>", " \/>").trim(), `<div name="${slotName}">${
+                    .replace(slot.outerHTML.replace(/>.*?<\/slot>/gsi, " \/>").trim(), `<div name="${slotName}">${
                         data.slots[slotName].html.trim().replace(/\{\{\s*(\w+)\s*\}\}/g, (_, key) => {
                             const dataProxy = (data[key]._value !== undefined) ? data[key]._value : data[key];
                             return data[key] !== undefined ? `<span c-text="${key}"></span>` : '';
@@ -140,7 +140,7 @@ export function mountComponent(ctx: Context, el: Element, componentName: string,
             }
             else{
                 renderedTemplate = renderedTemplate
-                    .replace(slot.outerHTML.replace("></slot>", " \/>").trim(), "<!-- Template not defined -->");
+                    .replace(slot.outerHTML.replace(/>.*?<\/slot>/gsi, " \/>").trim(), "<!-- Template not defined -->");
             }
         }
         

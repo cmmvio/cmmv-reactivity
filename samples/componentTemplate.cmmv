@@ -3,7 +3,9 @@
 
     <button @click="addCount()" class="btnAdd">Add Inside Component</button>
 
-    <slot :count="count" />
+    <div>
+        <slot :count="count" />
+    </div>
 </template>
 
 <style scoped>
