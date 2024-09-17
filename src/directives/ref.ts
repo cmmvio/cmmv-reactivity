@@ -13,10 +13,10 @@ export const ref: Directive = ({
     effect(() => {
         const ref = get();
         
-        $refs[ref] = el;
+        $refs[ref] = $refs[ref] ? Object.assign($refs[ref], { $el : el }) : { $el : el };
 
         if (prevRef && ref !== prevRef) 
-        delete $refs[prevRef]
+          delete $refs[prevRef]
         
         prevRef = ref
     });

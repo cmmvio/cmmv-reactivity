@@ -1,5 +1,21 @@
-<div scope>
-    <ComponentTemplate ref="comp" :count="test"></ComponentTemplate>
+<div>
+    <ComponentTemplate ref="comp" :count="test">
+        <template c-slot="{ count }">
+            Component value: {{ count }}
+        </template>
+    </ComponentTemplate>
+
+    <br/>
+
+    <ComponentTemplate ref="comp2" :count="test2">
+        <template c-slot="{ count }">
+            Component 2 value: {{ count }}
+        </template>
+    </ComponentTemplate>
+
+    <br/>
+
+    <button @click="addCount()" class="btnAdd">Add Root</button>
 
     <hr/>
     
@@ -18,8 +34,13 @@ createApp({
 
     data(){
         return {
-            test: 123
+            test: 123,
+            test2: 555
         }
+    },
+
+    addCount(){
+        this.test++;
     }
 }).mount();
 </script>

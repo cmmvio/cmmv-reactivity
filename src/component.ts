@@ -1,5 +1,7 @@
 import { effect, reactive } from "@vue/reactivity";
 import { Context } from "./context";
+import { nextTick } from "./scheduler";
+import { toDisplayString } from "./directives/text";
 
 const kebabToCamelCase = (str: string) =>
   str.replace(/-./g, (x) => x[1].toUpperCase());
@@ -23,6 +25,8 @@ export function mountComponent(ctx: Context, el: Element, componentName: string,
     
     let componentId = `${generateRandomId()}`;
     let componentScopeClass = `scope-${componentId}`;
+    let props = {};
+    let watchs = {};
 
     const extractProps = (el: Element, propsDefinition: any, scope: any) => {
         const props: Record<string, any> = {};
@@ -34,7 +38,7 @@ export function mountComponent(ctx: Context, el: Element, componentName: string,
 
             if (propsDefinition && propsDefinition[propName] !== undefined) {
                 if (isDynamicProp) {
-                    props[propName] = parseAttrValue(attr.value, scope);
+                    props[propName] = parseAttrValue(attr.value, scope, `$root_${propName}`);                    
                     props[`$root_${propName}`] = attr.value;
                 } else {
                     props[propName] = parseAttrValue(attr.value);
@@ -45,7 +49,7 @@ export function mountComponent(ctx: Context, el: Element, componentName: string,
         if(propsDefinition){
             Object.keys(propsDefinition).forEach(key => {
                 if (!(key in props)) {
-                    props[key] = propsDefinition[key]?.defaultValue;
+                    props[key] = propsDefinition[key]?.default;
                     if (props[key] === undefined) props[key] = null;
                 }
             });
@@ -54,10 +58,10 @@ export function mountComponent(ctx: Context, el: Element, componentName: string,
         return props;
     };
 
-    const parseAttrValue = (value: string, scope?: any) => {
+    const parseAttrValue = (value: string, scope?: any, root?: string) => {
         if (scope) {
             try {
-                return new Function("scope", `with(scope){ return ${value}; }`)(scope);
+                return scope[value]
             } catch (e) {
                 return value;
             }
@@ -69,9 +73,8 @@ export function mountComponent(ctx: Context, el: Element, componentName: string,
         }
     };
 
-    const props = extractProps(el, Component.props, ctx.scope);
-    const data = (typeof Component.data === "function") ? Component.data() : {};
-
+    props = extractProps(el, Component.props, ctx.scope);
+    const data = (typeof Component.data === "function") ? reactive(Component.data())  : {};
     const slots = {};
 
     el.querySelectorAll('template[v-slot], template[c-slot]').forEach((slotEl: HTMLTemplateElement) => {
@@ -80,10 +83,14 @@ export function mountComponent(ctx: Context, el: Element, componentName: string,
         slots[slotName] = { html: slotEl.innerHTML, scope: slotScope };
     });
 
-    let componentInstance = reactive({
+    let instance = {
         $ref: componentId,
         $template: Component.template,
         $style: (Component.$style) ? Component.$style : {},
+        $props: props,
+        $watchs: watchs,
+        $nextTick: nextTick,
+        $s: toDisplayString,
         slots,
         emit(event: string, payload: any) {
             if (props[`$root_${event}`]) { 
@@ -91,12 +98,12 @@ export function mountComponent(ctx: Context, el: Element, componentName: string,
                 const rootVar = props[`$root_${event}`];
                 ctx.scope[rootVar] = payload;
             }
-        },
-        ...props,
-        ...data,
-        ...Component.methods
-    });
+        }
+    }
 
+    Object.assign(instance, reactive(props), data, Component.methods);
+    let componentInstance = reactive(instance);
+    
     const bindEventListeners = (element: Element, instance: any) => {
         const events = Array.from(element.attributes).filter(attr => attr.name.startsWith('@'));
         events.forEach(attr => {
@@ -109,14 +116,13 @@ export function mountComponent(ctx: Context, el: Element, componentName: string,
     };
 
     const renderTemplate = (template: string, data: any, originalEl: Element, rootEl: Element) => {
-        let renderedTemplate = template.replace(/\{\{\s*(\w+)\s*\}\}/g, (_, key) => {
-            return data[key] !== undefined ? data[key] : '';
-        });
-
+        let renderedTemplate = template;
+        
+        const tmpElement = document.createElement('div');
         const templateElement = document.createElement('div');
-        templateElement.innerHTML = renderedTemplate;
-        const slots = templateElement.querySelectorAll(`slot`);
-
+        tmpElement.innerHTML = renderedTemplate;
+        const slots = tmpElement.querySelectorAll(`slot`);
+  
         for (let slot of slots) {
             const slotName = slot.getAttribute("name") || "default";
 
@@ -125,22 +131,28 @@ export function mountComponent(ctx: Context, el: Element, componentName: string,
                 templateSlot.innerHTML = data.slots[slotName].html;  
                 
                 renderedTemplate = renderedTemplate
-                    .replace(slot.outerHTML.replace("></slot>", " \/>").trim(), data.slots[slotName].html);
+                    .replace(slot.outerHTML.replace("></slot>", " \/>").trim(), `<div name="${slotName}">${
+                        data.slots[slotName].html.trim().replace(/\{\{\s*(\w+)\s*\}\}/g, (_, key) => {
+                            const dataProxy = (data[key]._value !== undefined) ? data[key]._value : data[key];
+                            return data[key] !== undefined ? `<span c-text="${key}"></span>` : '';
+                        })
+                    }</div>`);
             }
             else{
                 renderedTemplate = renderedTemplate
                     .replace(slot.outerHTML.replace("></slot>", " \/>").trim(), "<!-- Template not defined -->");
             }
         }
-
+        
         templateElement.innerHTML = renderedTemplate;
 
         componentInstance["$el"] = templateElement;
 
         if(ctx.scope && ctx.scope.data && typeof ctx.scope.data === "function")
-            componentInstance["$scope"] = ctx.scope.data();
+            componentInstance["$scope"] = reactive(ctx.scope.data());
         
         componentInstance["$root"] = rootEl;
+        componentInstance["$parent"] = ctx.scope;
 
         const attrs = Array.from(originalEl.attributes);
         let currentRef = componentId;
@@ -158,11 +170,9 @@ export function mountComponent(ctx: Context, el: Element, componentName: string,
         if (!templateElement.hasAttribute("ref"))
             templateElement.setAttribute('ref', componentId);
 
+        componentInstance.$template = templateElement.innerHTML;
+        ctx.scope.$refs[`${currentRef}`] = componentInstance;
         templateElement.setAttribute('scope', `$refs['${currentRef}']`);
-
-        const refContext = reactive(componentInstance);
-        ctx.scope[currentRef] = refContext;
-        ctx.scope.$refs[currentRef] = refContext;
 
         if (typeof Component.created === "function")
             Component.created.call(componentInstance);

@@ -49,18 +49,24 @@ export function createContext(parent?: Context): Context {
     return ctx;
 }
 
-export const createScopedContext = (ctx: Context, data = {}): Context => {
+export const createScopedContext = (ctx: Context, data: any = {}): Context => {
     const parentScope = ctx.scope;
     const mergedScope = Object.create(parentScope);
     Object.defineProperties(mergedScope, Object.getOwnPropertyDescriptors(data));
-    mergedScope.$refs = Object.create(parentScope.$refs || {});
+    mergedScope.$refs = Object.create(parentScope.$refs || {});    
     
     const reactiveProxy = reactive(
         new Proxy(mergedScope, {
+            get(target, key){
+                return data[key] ? data[key] : target[key]
+            },
             set(target, key, val, receiver) {
+                if(data[key])
+                    data[key] = val
+                
                 if (receiver === reactiveProxy && !Object.prototype.hasOwnProperty.call(target, key)) 
                     return Reflect.set(parentScope, key, val);
-                
+
                 return Reflect.set(target, key, val, receiver);
             }
         })

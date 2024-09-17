@@ -5,15 +5,26 @@ import { bindContextMethods, createContext } from "./context";
 import { toDisplayString } from './directives/text'
 import { nextTick } from "./scheduler";
 import { mountComponent } from "./component";
+import { updateProps } from "./props";
 
 export const createApp = (initialData?: any) => {
     const ctx = createContext();
 
     if (initialData) {
         let scopeData = { ...initialData };
-
-        if(typeof initialData.data == "function")
-            scopeData = { ...scopeData, ...initialData.data() };
+        
+        if(typeof initialData.data == "function"){
+            scopeData = new Proxy({ ...scopeData, ...initialData.data() }, {
+                get(obj, prop) {
+                    return obj[prop];
+                },
+                set(obj, prop, value) {
+                    updateProps(ctx, prop, value);
+                    obj[prop] = value;
+                    return true;
+                }
+            }) ;
+        }
 
         ctx.scope = reactive(scopeData);
 
@@ -71,7 +82,7 @@ export const createApp = (initialData?: any) => {
                 });
             });
             
-            rootBlocks = roots.map((el) => new Block(el, ctx, true))
+            rootBlocks = roots.map((el) => new Block(el, ctx, true));
 
             if (typeof initialData.mounted === "function")
                 initialData.mounted.call(ctx.scope);

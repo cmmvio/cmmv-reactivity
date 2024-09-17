@@ -1,7 +1,8 @@
 <template>
-    <div>{{ count }}</div>
+    <div>Prop: {{ count }} / Data: {{ value }}</div>
 
-    <button @click="addCount()" class="btnAdd">Add</button>
+    <button @click="addCount()" class="btnAdd">Add Inside Component</button>
+
     <slot :count="count" />
 </template>
 
@@ -16,13 +17,13 @@ export default {
     props: {
         count: {
             type: Number,
-            defaultValue: 0
+            default: 0
         }
     },
 
     data(){
         return {
-            teste: ""
+            value: 666
         }
     },
 
@@ -37,7 +38,8 @@ export default {
     methods: {
         addCount(){
             this.count++;
-            this.emit("count", this.count)
+            this.value++;
+            this.emit("count", this.count);
         }
     }
 }
