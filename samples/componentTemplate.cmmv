@@ -34,10 +34,14 @@ export default {
     },
 
     mounted(){
-        //console.log("mounted")
+        this.refreshClass();
     },
 
     methods: {
+        init(){
+            console.log('started')
+        },
+
         addCount(){
             this.count++;
             this.value++;

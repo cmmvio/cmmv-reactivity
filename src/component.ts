@@ -84,6 +84,7 @@ export function mountComponent(ctx: Context, el: Element, componentName: string,
     });
 
     let instance = {
+        ...Component,
         $ref: componentId,
         $template: Component.template,
         $style: (Component.$style) ? Component.$style : {},
@@ -91,7 +92,7 @@ export function mountComponent(ctx: Context, el: Element, componentName: string,
         $watchs: watchs,
         $nextTick: nextTick,
         $s: toDisplayString,
-        slots,
+        slots,        
         emit(event: string, payload: any) {
             if (props[`$root_${event}`]) { 
                 ctx.scope.$refs[this.$ref] = this;    
