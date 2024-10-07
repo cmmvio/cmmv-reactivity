@@ -104,6 +104,12 @@ export function mountComponent(ctx: Context, el: Element, componentName: string,
 
     Object.assign(instance, reactive(props), data, Component.methods);
     let componentInstance = reactive(instance);
+    const ignoreProp = ["data", "mounted", "props", "styles", "created", "template"];
+
+    for(let key in Component){
+        if(!ignoreProp.includes(key))
+            instance[key] = Component[key];
+    }
     
     const bindEventListeners = (element: Element, instance: any) => {
         const events = Array.from(element.attributes).filter(attr => attr.name.startsWith('@'));
