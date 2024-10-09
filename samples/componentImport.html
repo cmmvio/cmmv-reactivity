@@ -1,5 +1,5 @@
 <div>
-    <ComponentTemplate ref="comp" :count="test">
+    <ComponentTemplate ref="comp" :count="test" @click="onClick">
         <template c-slot="{ count }">
             Component value: {{ count }}
         </template>
@@ -41,6 +41,10 @@ createApp({
 
     addCount(){
         this.test++;
+    },
+
+    onClick(payload){
+        console.log("Teste method", payload.test)
     }
 }).mount();
 </script>

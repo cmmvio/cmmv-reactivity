@@ -3,6 +3,8 @@
 
     <button @click="addCount()" class="btnAdd">Add Inside Component</button>
 
+    <button @click="callClick" class="btnAdd">Emit Method</button>
+
     <div>
         <slot :count="count" />
     </div>
@@ -46,6 +48,10 @@ export default {
             this.count++;
             this.value++;
             this.emit("count", this.count);
+        },
+
+        callClick(){
+            this.emit("click", { test: 123 })
         }
     }
 }

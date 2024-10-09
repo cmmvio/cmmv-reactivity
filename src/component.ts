@@ -93,11 +93,14 @@ export function mountComponent(ctx: Context, el: Element, componentName: string,
         $nextTick: nextTick,
         $s: toDisplayString,
         slots,        
-        emit(event: string, payload: any) {
+        emit(event: string, payload: any) {            
             if (props[`$root_${event}`]) { 
                 ctx.scope.$refs[this.$ref] = this;    
                 const rootVar = props[`$root_${event}`];
                 ctx.scope[rootVar] = payload;
+            }
+            else if(this[`@${event}`]){
+                this[`@${event}`].call(this, payload);
             }
         }
     }
@@ -169,7 +172,17 @@ export function mountComponent(ctx: Context, el: Element, componentName: string,
                 currentRef = attr.value;
                 componentInstance["$ref"] = attr.value;
                 templateElement.setAttribute('ref', attr.value);
-            } else {
+            }
+            else if(attr.name.startsWith("@")){
+                if(ctx.scope[attr.value]){
+                    currentRef = attr.value;
+                    componentInstance[attr.name] = ctx.scope[attr.value];
+                }
+                else{
+                    console.error(`${attr.value} dont exists in context`);
+                }                
+            }
+            else {
                 templateElement.setAttribute(attr.name, attr.value);
             }
         }
