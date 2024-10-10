@@ -7,7 +7,7 @@
 
     <br/>
 
-    <ComponentTemplate ref="comp2" :count="test2">
+    <ComponentTemplate ref="comp2" :count="test2" @click="onClick">
         <template c-slot="{ count }">
             Component 2 value: {{ count }}
         </template>
@@ -44,6 +44,7 @@ createApp({
     },
 
     onClick(payload){
+        console.log(this.$refs);
         console.log("Teste method", payload.test)
     }
 }).mount();

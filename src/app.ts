@@ -43,7 +43,7 @@ export const createApp = (initialData?: any) => {
         }, {});
     }
 
-    if (typeof initialData.created === "function")
+    if (initialData && typeof initialData.created === "function")
         initialData.created.call(ctx.scope);
    
     return {
@@ -81,10 +81,12 @@ export const createApp = (initialData?: any) => {
                         mountComponent(ctx, componentEl, componentName, rootEl);                    
                 });
             });
-            
-            rootBlocks = roots.map((el) => new Block(el, ctx, true));
 
-            if (typeof initialData.mounted === "function")
+            const refs = ctx.scope.$refs;
+            rootBlocks = roots.map((el) => new Block(el, ctx, true));
+            ctx.scope.$refs = refs;
+
+            if (initialData && typeof initialData.mounted === "function")
                 initialData.mounted.call(ctx.scope);
 
             return this;

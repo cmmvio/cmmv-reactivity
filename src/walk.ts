@@ -48,9 +48,9 @@ const processElementNode = (el: Element, ctx: Context): void | ChildNode | null 
     const hasVOnce = checkAndRemoveAttr(el, 'once') !== null || checkAndRemoveAttr(el, 'v-once') !== null;
     if (hasVOnce) inOnce = true;
 
-    if ((exp = checkAndRemoveAttr(el, 'ref'))) {
-        applyDirective(el, ref, `"${exp}"`, ctx);
-    }
+    //if ((exp = checkAndRemoveAttr(el, 'ref'))) {
+    //    applyDirective(el, ref, `"${exp}"`, ctx);
+    //}
 
     walkChildren(el, ctx);
     processElementDirectives(el, ctx);

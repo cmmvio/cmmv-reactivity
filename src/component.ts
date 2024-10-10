@@ -174,13 +174,10 @@ export function mountComponent(ctx: Context, el: Element, componentName: string,
                 templateElement.setAttribute('ref', attr.value);
             }
             else if(attr.name.startsWith("@")){
-                if(ctx.scope[attr.value]){
-                    currentRef = attr.value;
-                    componentInstance[attr.name] = ctx.scope[attr.value];
-                }
-                else{
-                    console.error(`${attr.value} dont exists in context`);
-                }                
+                if(ctx.scope[attr.value])
+                    componentInstance[attr.name] = ctx.scope[attr.value];                
+                else
+                    console.error(`${attr.value} dont exists in context`);            
             }
             else {
                 templateElement.setAttribute(attr.name, attr.value);
