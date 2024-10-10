@@ -1,3 +1,5 @@
+# [0.4.0](https://github.com/andrehrferreira/cmmv-reactivity/compare/v0.3.0...v0.4.0) (2024-10-10)
+
 # [0.3.0](https://github.com/andrehrferreira/cmmv-reactivity/compare/v0.2.3...v0.3.0) (2024-10-09)
 
 ### Features
