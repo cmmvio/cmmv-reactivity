@@ -2,6 +2,7 @@ import { effect, reactive } from "@vue/reactivity";
 import { Context } from "./context";
 import { nextTick } from "./scheduler";
 import { toDisplayString } from "./directives/text";
+import { nativeHtmlTags } from "./constants";
 
 const kebabToCamelCase = (str: string) =>
   str.replace(/-./g, (x) => x[1].toUpperCase());
@@ -16,7 +17,7 @@ function generateRandomId(length = 8): string {
     return result;
 }
 
-export function mountComponent(ctx: Context, el: Element, componentName: string, rootEl: Element) {
+export async function mountComponent(ctx: Context, el: Element, componentName: string, rootEl: Element) {
     const Component = ctx.components[componentName];
 
     if (!Component) 
@@ -108,6 +109,9 @@ export function mountComponent(ctx: Context, el: Element, componentName: string,
     let componentInstance = reactive(instance);
     const ignoreProp = ["data", "mounted", "props", "styles", "created", "template"];
 
+    ctx.components = (Component.components) ? { ...ctx.components, ...Component.components } : ctx.components;
+    ctx.components = createComponentAliases(ctx.components);
+    
     for(let key in Component){
         if(!ignoreProp.includes(key))
             instance[key] = Component[key];
@@ -124,7 +128,7 @@ export function mountComponent(ctx: Context, el: Element, componentName: string,
         });
     };
 
-    const renderTemplate = (template: string, data: any, originalEl: Element, rootEl: Element) => {
+    const renderTemplate = async (template: string, data: any, originalEl: Element, rootEl: Element) => {
         let renderedTemplate = template;
         
         const tmpElement = document.createElement('div');
@@ -205,6 +209,18 @@ export function mountComponent(ctx: Context, el: Element, componentName: string,
 
         bindEventListeners(templateElement, componentInstance);
 
+        const componentEls = templateElement.querySelectorAll('*');
+
+        for(let componentEl of componentEls){
+            const componentName = componentEl.tagName.toLowerCase();
+
+            if (nativeHtmlTags.includes(componentName)) 
+                continue;
+            
+            if (ctx.components) 
+                await mountComponent(ctx, componentEl, componentName, templateElement); 
+        }
+  
         return templateElement;
     };
 
@@ -221,8 +237,26 @@ export function mountComponent(ctx: Context, el: Element, componentName: string,
 
     if (typeof Component.mounted === "function")
         Component.mounted.call(componentInstance);
-
-    effect(() => {
-        el.replaceWith(renderTemplate(Component.template, componentInstance, el, rootEl));
-    });
+  
+    effect(async () => {            
+        el.replaceWith(await renderTemplate(Component.template, componentInstance, el, rootEl));
+    });    
 };
+
+
+function createComponentAliases(components) {
+    const newComponents = { ...components };
+
+    Object.keys(components).forEach((key) => {
+        const kebabCaseName = camelToKebabCase(key);
+        newComponents[kebabCaseName] = components[key];
+        newComponents[key] = components[key];
+        newComponents[key.toLowerCase()] = components[key];
+    });
+
+    return newComponents;
+}
+
+function camelToKebabCase(str) {
+    return str.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+}

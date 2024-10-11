@@ -1,7 +1,14 @@
 <template>  
-    <button><slot/></button>
+    <button>
+        <icon></icon>
+        <slot/>
+    </button>
 </template>
 
 <script>
-export default {}
+import Icon from './icon.cmmv';
+
+export default {
+    components: { Icon } 
+}
 </script>

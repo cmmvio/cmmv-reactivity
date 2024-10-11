@@ -6,14 +6,7 @@ import { toDisplayString } from './directives/text'
 import { nextTick } from "./scheduler";
 import { mountComponent } from "./component";
 import { updateProps } from "./props";
-
-const nativeHtmlTags = [
-    'html', 'head', 'meta', 'link', 'script', 'body', 'div', 'span', 'p', 'a', 'img', 'ul', 'li', 'ol', 
-    'table', 'thead', 'tbody', 'tr', 'th', 'td', 'button', 'input', 'select', 'option', 'textarea', 'form', 
-    'header', 'footer', 'article', 'section', 'main', 'nav', 'aside', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 
-    'iframe', 'video', 'audio', 'canvas', 'br', 'hr', 'label', 'strong', 'em', 'b', 'i', 'u', 'small',
-    'template', 'style'
-];
+import { nativeHtmlTags } from "./constants";
 
 export const createApp = (initialData?: any) => {
     const ctx = createContext();
@@ -57,7 +50,7 @@ export const createApp = (initialData?: any) => {
         initialData.created.call(ctx.scope);
    
     return {
-        mount(el?: string | Element | null) {
+        async mount(el?: string | Element | null) {
             if (typeof el === 'string') {
                 el = document.querySelector(el);
 
@@ -81,19 +74,19 @@ export const createApp = (initialData?: any) => {
             if (!roots.length) 
                 roots = [el];
 
-            roots.forEach((rootEl) => {
+            for(let rootEl of roots){                     
                 const componentEls = rootEl.querySelectorAll('*');
-
-                componentEls.forEach((componentEl) => {
+ 
+                for(let componentEl of componentEls){
                     const componentName = componentEl.tagName.toLowerCase();
-
+                
                     if (nativeHtmlTags.includes(componentName)) 
-                        return;
-
+                        continue;
+        
                     if (ctx.components) 
-                        mountComponent(ctx, componentEl, componentName, rootEl);                    
-                });
-            });
+                        await mountComponent(ctx, componentEl, componentName, rootEl); 
+                }
+            }
 
             const refs = ctx.scope.$refs;
             rootBlocks = roots.map((el) => new Block(el, ctx, true));
