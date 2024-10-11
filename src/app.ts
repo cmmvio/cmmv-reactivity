@@ -7,6 +7,14 @@ import { nextTick } from "./scheduler";
 import { mountComponent } from "./component";
 import { updateProps } from "./props";
 
+const nativeHtmlTags = [
+    'html', 'head', 'meta', 'link', 'script', 'body', 'div', 'span', 'p', 'a', 'img', 'ul', 'li', 'ol', 
+    'table', 'thead', 'tbody', 'tr', 'th', 'td', 'button', 'input', 'select', 'option', 'textarea', 'form', 
+    'header', 'footer', 'article', 'section', 'main', 'nav', 'aside', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 
+    'iframe', 'video', 'audio', 'canvas', 'br', 'hr', 'label', 'strong', 'em', 'b', 'i', 'u', 'small',
+    'template', 'style'
+];
+
 export const createApp = (initialData?: any) => {
     const ctx = createContext();
 
@@ -38,9 +46,11 @@ export const createApp = (initialData?: any) => {
 
     if (initialData?.components) {
         ctx.components = Object.keys(initialData.components).reduce((acc, key) => {
-            acc[key.toLowerCase()] = initialData.components[key];
+            acc[key] = initialData.components[key];
             return acc;
         }, {});
+
+        ctx.components = createComponentAliases(ctx.components);
     }
 
     if (initialData && typeof initialData.created === "function")
@@ -77,6 +87,9 @@ export const createApp = (initialData?: any) => {
                 componentEls.forEach((componentEl) => {
                     const componentName = componentEl.tagName.toLowerCase();
 
+                    if (nativeHtmlTags.includes(componentName)) 
+                        return;
+
                     if (ctx.components) 
                         mountComponent(ctx, componentEl, componentName, rootEl);                    
                 });
@@ -96,4 +109,21 @@ export const createApp = (initialData?: any) => {
             rootBlocks.forEach((block) => block.teardown())
         }
     }
+}
+
+function createComponentAliases(components) {
+    const newComponents = { ...components };
+
+    Object.keys(components).forEach((key) => {
+        const kebabCaseName = camelToKebabCase(key);
+        newComponents[kebabCaseName] = components[key];
+        newComponents[key] = components[key];
+        newComponents[key.toLowerCase()] = components[key];
+    });
+
+    return newComponents;
+}
+
+function camelToKebabCase(str) {
+    return str.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
 }

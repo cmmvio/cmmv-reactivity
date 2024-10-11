@@ -17,8 +17,7 @@ function generateRandomId(length = 8): string {
 }
 
 export function mountComponent(ctx: Context, el: Element, componentName: string, rootEl: Element) {
-    const camelCaseName = kebabToCamelCase(componentName);
-    const Component = ctx.components[camelCaseName];
+    const Component = ctx.components[componentName];
 
     if (!Component) 
         return;
@@ -75,7 +74,7 @@ export function mountComponent(ctx: Context, el: Element, componentName: string,
 
     props = extractProps(el, Component.props, ctx.scope);
     const data = (typeof Component.data === "function") ? reactive(Component.data())  : {};
-    const slots = {};
+    const slots = { default: { html: el.innerHTML, scope: null }};
 
     el.querySelectorAll('template[v-slot], template[c-slot], template').forEach((slotEl: HTMLTemplateElement) => {
         const slotScope = slotEl.getAttribute('v-slot') || slotEl.getAttribute('c-slot');
@@ -148,9 +147,13 @@ export function mountComponent(ctx: Context, el: Element, componentName: string,
                         })
                     }</div>`);
             }
+            else if(data.slots.default){
+                renderedTemplate = renderedTemplate
+                    .replace(slot.outerHTML.replace(/>.*?<\/slot>/gsi, " \/>").trim(), data.slots.default.html);
+            }
             else{
                 renderedTemplate = renderedTemplate
-                    .replace(slot.outerHTML.replace(/>.*?<\/slot>/gsi, " \/>").trim(), "<!-- Template not defined -->");
+                    .replace(slot.outerHTML.replace(/>.*?<\/slot>/gsi, " \/>").trim(), "");
             }
         }
         
@@ -200,7 +203,7 @@ export function mountComponent(ctx: Context, el: Element, componentName: string,
     };
 
     if (Component.styles) {
-        const styleId = `style-${camelCaseName}`;
+        const styleId = `style-${componentName}`;
 
         if (!document.getElementById(styleId)) {
             const styleElement = document.createElement('style');
