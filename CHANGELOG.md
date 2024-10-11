@@ -1,3 +1,10 @@
+## [0.4.2](https://github.com/andrehrferreira/cmmv-reactivity/compare/v0.4.1...v0.4.2) (2024-10-11)
+
+### Features
+
+-   component alias, default value ([8d76199](https://github.com/andrehrferreira/cmmv-reactivity/commit/8d761999f1fe43441de4c67906b0842c6c4b353e))
+-   sub components ([3c40118](https://github.com/andrehrferreira/cmmv-reactivity/commit/3c4011821ccb3763eb7c88094440647394d84bfd))
+
 ## [0.4.1](https://github.com/andrehrferreira/cmmv-reactivity/compare/v0.4.0...v0.4.1) (2024-10-11)
 
 ### Bug Fixes
