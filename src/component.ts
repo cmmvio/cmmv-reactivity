@@ -131,29 +131,35 @@ export function mountComponent(ctx: Context, el: Element, componentName: string,
         const templateElement = document.createElement('div');
         tmpElement.innerHTML = renderedTemplate;
         const slots = tmpElement.querySelectorAll(`slot`);
-  
+
         for (let slot of slots) {
             const slotName = slot.getAttribute("name") || "default";
 
-            if (data.slots[slotName]) {
+            if (data.slots[slotName] && slotName !== "default") {
                 const templateSlot = document.createElement('div');
                 templateSlot.innerHTML = data.slots[slotName].html;  
 
                 renderedTemplate = renderedTemplate
                     .replace(slot.outerHTML.replace(/>.*?<\/slot>/gsi, " \/>").trim(), `<div name="${slotName}">${
                         data.slots[slotName].html.trim().replace(/\{\{\s*(\w+)\s*\}\}/g, (_, key) => {
-                            const dataProxy = (data[key]._value !== undefined) ? data[key]._value : data[key];
+                            return data[key] !== undefined ? `<span c-text="${key}"></span>` : '';
+                        })
+                    }</div>`)
+                    .replace(slot.outerHTML.replace(/>.*?<\/slot>/gsi, "\/>").trim(), `<div name="${slotName}">${
+                        data.slots[slotName].html.trim().replace(/\{\{\s*(\w+)\s*\}\}/g, (_, key) => {
                             return data[key] !== undefined ? `<span c-text="${key}"></span>` : '';
                         })
                     }</div>`);
             }
             else if(data.slots.default){
                 renderedTemplate = renderedTemplate
-                    .replace(slot.outerHTML.replace(/>.*?<\/slot>/gsi, " \/>").trim(), data.slots.default.html);
+                    .replace(slot.outerHTML.replace(/>.*?<\/slot>/gsi, " \/>").trim(), data.slots.default.html)
+                    .replace(slot.outerHTML.replace(/>.*?<\/slot>/gsi, "\/>").trim(), data.slots.default.html);
             }
             else{
                 renderedTemplate = renderedTemplate
-                    .replace(slot.outerHTML.replace(/>.*?<\/slot>/gsi, " \/>").trim(), "");
+                    .replace(slot.outerHTML.replace(/>.*?<\/slot>/gsi, " \/>").trim(), "")
+                    .replace(slot.outerHTML.replace(/>.*?<\/slot>/gsi, "\/>").trim(), "");
             }
         }
         

@@ -4,5 +4,9 @@
 
 <script type="module">
 import { createApp } from '../src';
-createApp().mount();
+import ComponentButton from "./componentButton.cmmv";
+
+createApp({
+    components: { ComponentButton } 
+}).mount();
 </script>
