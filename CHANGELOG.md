@@ -1,3 +1,9 @@
+## [0.4.3](https://github.com/andrehrferreira/cmmv-reactivity/compare/v0.4.2...v0.4.3) (2024-10-15)
+
+### Features
+
+-   component directive ([c046eec](https://github.com/andrehrferreira/cmmv-reactivity/commit/c046eec6d5c73dd06f12c0fd58042516274737b7))
+
 ## [0.4.2](https://github.com/andrehrferreira/cmmv-reactivity/compare/v0.4.1...v0.4.2) (2024-10-11)
 
 ### Features
