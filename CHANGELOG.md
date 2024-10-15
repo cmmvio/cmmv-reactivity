@@ -1,3 +1,14 @@
+## [0.4.6](https://github.com/andrehrferreira/cmmv-reactivity/compare/v0.4.5...v0.4.6) (2024-10-15)
+
+### Bug Fixes
+
+-   component load ([676c665](https://github.com/andrehrferreira/cmmv-reactivity/commit/676c665f81a613eb2710a78c3ae71b105d219ad7))
+-   ssr directives ([c110b4b](https://github.com/andrehrferreira/cmmv-reactivity/commit/c110b4b148042d0e5b0e0d239863c91960cf46a1))
+
+### Features
+
+-   ignore tag with - ([2420441](https://github.com/andrehrferreira/cmmv-reactivity/commit/24204411302ff0ada90d0a1cc7ce2c6243a7ffe1))
+
 ## [0.4.5](https://github.com/andrehrferreira/cmmv-reactivity/compare/v0.4.4...v0.4.5) (2024-10-15)
 
 ### Bug Fixes
