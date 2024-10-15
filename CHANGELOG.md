@@ -1,3 +1,9 @@
+## [0.4.4](https://github.com/andrehrferreira/cmmv-reactivity/compare/v0.4.3...v0.4.4) (2024-10-15)
+
+### Bug Fixes
+
+-   invalid text, multi scope ([01584db](https://github.com/andrehrferreira/cmmv-reactivity/commit/01584dbba6f5a59d1e6a6480d033bed5b12f9dbf))
+
 ## [0.4.3](https://github.com/andrehrferreira/cmmv-reactivity/compare/v0.4.2...v0.4.3) (2024-10-15)
 
 ### Features
