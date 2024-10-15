@@ -1,3 +1,9 @@
+## [0.4.5](https://github.com/andrehrferreira/cmmv-reactivity/compare/v0.4.4...v0.4.5) (2024-10-15)
+
+### Bug Fixes
+
+-   text process ([f73a6a1](https://github.com/andrehrferreira/cmmv-reactivity/commit/f73a6a1cb87d0e445017894304e0c429aba5ca08))
+
 ## [0.4.4](https://github.com/andrehrferreira/cmmv-reactivity/compare/v0.4.3...v0.4.4) (2024-10-15)
 
 ### Bug Fixes
