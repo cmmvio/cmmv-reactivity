@@ -5,18 +5,20 @@
 
   createApp({
     input: '# hello',
-    get compiledMarkdown() {
-      return marked(this.input)
-    },
+    compiledMarkdown: "",
     update: _.debounce(function (e) {
-      this.input = e.target.value
-    }, 100)
+      this.input = e.target.value 
+      this.compiledMarkdown = marked(e.target.value) 
+    }, 100),
+    mounted(){
+      this.compiledMarkdown = marked(this.input)
+    }
   }).mount('#editor')
 </script>
 
 <div id="editor">
   <textarea class="input" :value="input" @input="update"></textarea>
-  <div class="output" v-html="compiledMarkdown"></div>
+  <div class="output" c-html="compiledMarkdown"></div>
 </div>
 
 <style>

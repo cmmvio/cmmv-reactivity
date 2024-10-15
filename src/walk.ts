@@ -48,10 +48,9 @@ const processElementNode = (el: Element, ctx: Context): void | ChildNode | null 
     const hasVOnce = checkAndRemoveAttr(el, 'once') !== null || checkAndRemoveAttr(el, 'v-once') !== null;
     if (hasVOnce) inOnce = true;
 
-    //if ((exp = checkAndRemoveAttr(el, 'ref'))) {
-    //    applyDirective(el, ref, `"${exp}"`, ctx);
-    //}
-
+    if ((exp = checkAndRemoveAttr(el, 'ref'))) 
+        applyDirective(el, ref, `"${exp}"`, ctx);
+    
     walkChildren(el, ctx);
     processElementDirectives(el, ctx);
 
@@ -133,7 +132,7 @@ const processElementDirectives = (el: Element, ctx: Context): void => {
     }
 }
 
-const applyDirectiveBasedOnName = (
+export const applyDirectiveBasedOnName = (
     el: Element,
     raw: string,
     exp: string,
@@ -156,7 +155,11 @@ const applyDirectiveBasedOnName = (
         arg = raw.slice(1);
     } else {
         const argIndex = raw.indexOf(':');
-        const dirName = argIndex > 0 ? raw.slice(2, argIndex) : raw.slice(2);
+        let dirName = argIndex > 0 ? raw.slice(2, argIndex) : raw.slice(2);
+
+        if(dirName.indexOf("-") > -1)
+            dirName = dirName.split("-")[1];
+
         dir = builtInDirectives[dirName] || ctx.dirs[dirName];
         arg = argIndex > 0 ? raw.slice(argIndex + 1) : undefined;
     }
@@ -167,7 +170,6 @@ const applyDirectiveBasedOnName = (
         el.removeAttribute(raw);
     }
 }
-
 
 const resolveTemplate = (el: Element, template: string) => {
     if (template[0] === '#') {

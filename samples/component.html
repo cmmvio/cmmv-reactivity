@@ -2,13 +2,13 @@
     import { createApp, reactive } from '../src'
   
     function MyComp() {
-      return {
-        $template: '#comp',
-        count: 0,
-        get plusOne() {
-          return this.count + 1
-        }
-      }
+		return {
+			$template: '#comp',
+			count: 0,
+			get plusOne() {
+				return this.count + 1
+			}
+		}
     }
   
     createApp({ MyComp }).mount()

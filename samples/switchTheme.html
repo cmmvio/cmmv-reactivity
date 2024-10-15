@@ -1,0 +1,33 @@
+<div>
+    <switch-theme :theme="theme" @change="changeTheme"></switch-theme>
+
+    <span>{{ theme }}</span>
+</div>
+
+<script type="module">
+import { createApp } from '../src';
+import SwitchTheme from "./switchTheme.cmmv";
+
+createApp({
+    components: { SwitchTheme },
+    
+    data(){
+        return {
+            theme: "default"
+        }
+    },
+
+    mounted(){
+        const theme = localStorage.getItem("theme");
+        this.theme = theme || "default";
+    },
+
+    methods: {
+        changeTheme(){
+            console.log("changed")
+            this.theme = (this.theme === "default") ? "dark" : "default";
+            localStorage.setItem("theme", this.theme);
+        }
+    }
+}).mount();
+</script>

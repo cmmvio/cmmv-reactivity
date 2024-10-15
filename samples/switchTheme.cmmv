@@ -1,0 +1,48 @@
+<template>
+    <button @click="changeTheme" class="switchButton">
+        <div class="pr-2">
+            <icon-light-mode c-show="theme==='dark'"></icon-light-mode>
+            <icon-dark-mode c-show="theme==='default'"></icon-dark-mode>
+        </div>
+
+        <div>{{ theme }}</div>
+    </button>
+</template>
+
+<style scoped>
+.switchButton {
+    display: flex;
+    padding: 10px;
+}
+
+.pr-2{
+    padding-right: 5px
+}
+</style>
+
+<script>
+import IconLightMode from "./iconLightMode.cmmv";
+import IconDarkMode from "./iconDarkMode.cmmv";
+
+export default {
+    components: { IconLightMode, IconDarkMode },
+
+    props: {
+        theme: {
+            type: String,
+            default: "default"
+        }
+    },
+
+    mounted(){
+        console.log("mounted")
+    },
+
+    methods: {
+        changeTheme(){
+            //console.log("changeTheme")
+            this.emit("change")
+        }
+    }
+}
+</script>

@@ -1,12 +1,13 @@
-import { reactive } from "@vue/reactivity";
+import { reactive, effect } from "@vue/reactivity";
 
 import { Block } from "./block";
-import { bindContextMethods, createContext } from "./context";
+import { bindContextMethods, Context, createContext } from "./context";
 import { toDisplayString } from './directives/text'
 import { nextTick } from "./scheduler";
 import { mountComponent } from "./component";
 import { updateProps } from "./props";
 import { nativeHtmlTags } from "./constants";
+import { applyDirectiveBasedOnName } from "./walk";
 
 export const createApp = (initialData?: any) => {
     const ctx = createContext();
@@ -62,7 +63,7 @@ export const createApp = (initialData?: any) => {
 
             el = el || document.documentElement;
             let roots: Element[];
-
+            
             if (el.hasAttribute('scope')) {
                 roots = [el]
             } else {
@@ -79,22 +80,49 @@ export const createApp = (initialData?: any) => {
  
                 for(let componentEl of componentEls){
                     const componentName = componentEl.tagName.toLowerCase();
-                
-                    if (nativeHtmlTags.includes(componentName)) 
-                        continue;
-        
-                    if (ctx.components) 
-                        await mountComponent(ctx, componentEl, componentName, rootEl); 
+                        
+                    if (!nativeHtmlTags.includes(componentName) && ctx.components) 
+                        await mountComponent(ctx, componentEl, componentName, rootEl, true)                       
                 }
             }
 
             const refs = ctx.scope.$refs;
-            rootBlocks = roots.map((el) => new Block(el, ctx, true));
+            roots.map((el) => new Block(el, ctx, true));
             ctx.scope.$refs = refs;
 
-            if (initialData && typeof initialData.mounted === "function")
-                initialData.mounted.call(ctx.scope);
+            for(let rootEl of roots){                     
+                const componentEls = rootEl.querySelectorAll('*');
+    
+                for(let componentEl of componentEls){
+                    const componentName = componentEl.tagName.toLowerCase();
+                        
+                    if (!nativeHtmlTags.includes(componentName) && ctx.components) 
+                        await mountComponent(ctx, componentEl, componentName, rootEl)
+                }
+            }   
 
+            for(let rootEl of roots){   
+                const elements = rootEl.querySelectorAll('*');
+    
+                elements.forEach(element => {
+                    Array.from(element.attributes).forEach(attr => {
+                        
+                        if (attr.name.startsWith('data-')) {                        
+                            const directiveName = attr.name;
+                            const directiveValue = attr.value;
+
+                            element.setAttribute(`c-${directiveName.replace("data-", "")}`, directiveValue);
+                            element.removeAttribute(directiveName);
+                            applyDirectiveBasedOnName(element, directiveName, directiveValue, ctx);
+                            element.removeAttribute(`c-${directiveName.replace("data-", "")}`);
+                        }
+                    });
+                });
+            }
+            
+            if (initialData && typeof initialData.mounted === "function")
+                initialData.mounted.call(ctx.scope);        
+            
             return this;
         },
 
