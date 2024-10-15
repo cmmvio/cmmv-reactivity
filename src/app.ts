@@ -81,11 +81,8 @@ export const createApp = (initialData?: any) => {
                 for(let componentEl of componentEls){
                     const componentName = componentEl.tagName.toLowerCase();
                         
-                    if (!nativeHtmlTags.includes(componentName) && ctx.components){
-                        console.log(componentName);
-                        await mountComponent(ctx, componentEl, componentName, rootEl, true)   
-                    }
-                                                            
+                    if (!nativeHtmlTags.includes(componentName) && ctx.components && componentName.indexOf("-") === -1)
+                        await mountComponent(ctx, componentEl, componentName, rootEl, true)                                                               
                 }
             }
 
@@ -99,7 +96,7 @@ export const createApp = (initialData?: any) => {
                 for(let componentEl of componentEls){
                     const componentName = componentEl.tagName.toLowerCase();
                         
-                    if (!nativeHtmlTags.includes(componentName) && ctx.components) 
+                    if (!nativeHtmlTags.includes(componentName) && ctx.components && componentName.indexOf("-") === -1) 
                         await mountComponent(ctx, componentEl, componentName, rootEl)
                 }
             }   
