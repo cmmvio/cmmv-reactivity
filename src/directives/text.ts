@@ -5,7 +5,9 @@ export const isObject = (val: unknown): val is Record<any, any> =>
 
 export const text: Directive<Text | Element> = ({ el, get, effect, ctx, exp }) => {
     effect(() => {
-        el.textContent = toDisplayString(get())
+        const value = get();
+        const toDisplay = toDisplayString('' + value ? value : '');
+        el.textContent = toDisplay
     })
 }
 

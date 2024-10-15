@@ -60,20 +60,30 @@ const processElementNode = (el: Element, ctx: Context): void | ChildNode | null 
 const processTextNode = (node: Text, ctx: Context): void => {
     const data = node.data;
 
-    if (data.includes(ctx.delimiters[0])) {
+    if (data.includes(ctx.delimiters[0])) {        
         const segments: string[] = [];
         let lastIndex = 0;
         let match;
 
-        while ((match = ctx.delimitersRE.exec(data))) {
+        while ((match = ctx.delimitersRE.exec(data))) {            
             segments.push(JSON.stringify(data.slice(lastIndex, match.index)));
-            segments.push(`$s(${match[1]})`);
+
+            try{
+                const result = evaluate(ctx.scope, match[1]);
+
+                if(result)
+                    segments.push(`$s(${match[1]})`);
+            }
+            catch{
+                segments.push(`${match[1]}`);
+            }
+            
             lastIndex = match.index + match[0].length;
         }
 
         if (lastIndex < data.length) 
             segments.push(JSON.stringify(data.slice(lastIndex)));
-        
+
         applyDirective(node, text, segments.join('+'), ctx);
     }
 }
@@ -97,7 +107,8 @@ const applyDirective = (
     arg?: string,
     modifiers?: Record<string, true>
 ): void => {
-    const get = (e = exp) => evaluate(ctx.scope, e, el);
+
+    const get = (e = exp) => evaluate(ctx.scope, e, el)
 
     const cleanup = dir({
         el,

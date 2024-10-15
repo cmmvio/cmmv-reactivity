@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" :data-theme="$style.theme" scope>
+    <head>
+        <title></title>
+    </head>
+    <body scope> 
+        {{ test.toUpperCase()  }}
+
+        <div scope="{ test: 'sub' }">
+            {{ test.toUpperCase() }}
+        </div>
+
+        <div scope="{ test: 123 }">
+            {{ test }}
+        </div>
+    </body>
+</html>
+
+<script type="module">
+import { createApp } from '../src';
+
+createApp({    
+    data(){
+        return {
+            test: "default"
+        }
+    }
+}).mount();
+</script>
