@@ -71,7 +71,7 @@ const processTextNode = (node: Text, ctx: Context): void => {
             try{
                 const result = evaluate(ctx.scope, match[1]);
 
-                if(result)
+                if(result !== undefined)
                     segments.push(`$s(${match[1]})`);
             }
             catch{
