@@ -18,9 +18,8 @@ export const queueJob = (job: Function) => {
 const flushJobs = () => {
     let job;
 
-    while ((job = queue.shift())) {
+    while ((job = queue.shift())) 
         job();
-    }
     
     isFlushing = false;
 }

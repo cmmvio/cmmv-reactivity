@@ -268,6 +268,10 @@ export function mountComponent(
                 templateElement.setAttribute('ref', componentId);
 
             componentInstance.$template = templateElement.innerHTML;
+
+            if (!ctx.scope.$refs)
+                ctx.scope.$refs = {};
+            
             ctx.scope.$refs[`${currentRef}`] = componentInstance;
 
             if(preProcess)

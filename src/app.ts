@@ -51,6 +51,9 @@ export const createApp = (initialData?: any) => {
         initialData.created.call(ctx.scope);
    
     return {
+        ctx,
+        ...ctx,
+
         async mount(el?: string | Element | null) {
             if (typeof el === 'string') {
                 el = document.querySelector(el);

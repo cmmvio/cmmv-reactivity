@@ -11,15 +11,15 @@ import { inOnce } from './walk'
 
 export interface Context {
     key?: any
-    delimiters: [string, string]
-    delimitersRE: RegExp
-    effect: typeof rawEffect
-    effects: ReactiveEffectRunner[]
+    delimiters?: [string, string]
+    delimitersRE?: RegExp
+    effect?: typeof rawEffect
+    effects?: ReactiveEffectRunner[]
     scope: Record<string, any>
-    dirs: Record<string, Directive>
+    dirs?: Record<string, Directive>
     blocks: Block[],
     cleanups: (() => void)[],
-    components: {},
+    components?: {},
 }
 
 export function createContext(parent?: Context): Context {

@@ -92,10 +92,18 @@ export class Block {
     }
 
     teardown() {
+        this.ctx.effects.forEach(effect => stop(effect));
+        this.ctx.effects.length = 0;
+
         this.ctx.blocks.forEach((child) => {
-          child.teardown()
+            child.teardown();
         });
-        this.ctx.effects.forEach(stop)
-		this.ctx.cleanups.forEach((fn) => fn());
+
+        if (this.parentCtx) {
+            remove(this.parentCtx.blocks, this);
+        }
+
+        this.ctx.cleanups.forEach((fn) => fn());
+        this.ctx.cleanups.length = 0;
     }
 }

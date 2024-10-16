@@ -57,7 +57,7 @@ const processElementNode = (el: Element, ctx: Context): void | ChildNode | null 
     if (hasVOnce) inOnce = false;
 }
 
-const processTextNode = (node: Text, ctx: Context): void => {
+export const processTextNode = (node: Text, ctx: Context): void => {
     const data = node.data;
 
     if (data.includes(ctx.delimiters[0])) {        
@@ -93,7 +93,7 @@ const walkChildren = (node: Element | DocumentFragment, ctx: Context): void => {
     while (child) child = walk(child, ctx) || child.nextSibling;
 }
 
-const checkAndRemoveAttr = (el: Element, name: string): string | null => {
+export const checkAndRemoveAttr = (el: Element, name: string): string | null => {
     const val = el.getAttribute(name);
     if (val !== null) el.removeAttribute(name);
     return val;

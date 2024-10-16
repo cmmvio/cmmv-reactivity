@@ -9,7 +9,7 @@ export const execute = (scope: any, exp: string, el?: Node) => {
     try {
         return fn(scope, el);
     } catch (e) {
-        //console.error(`Error when executing expression "${exp}":`, e);
+        return () => {};
     }
 }
   
@@ -17,7 +17,6 @@ export const toFunction = (exp: string): Function => {
     try {
         return new Function(`$data`, `$el`, `with($data){${exp}}`);
     } catch (e) {
-        //console.error(`Error creating function from expression: ${exp}`, e);
         return () => {};
     }
 }
