@@ -10,7 +10,7 @@ describe('Async Scheduling System', () => {
         });
         expect(called).toBe(false);
 
-        await nextTick(); // aguardar a próxima tick para garantir que o teste seja concluído
+        await nextTick();
     });
 
     it('should queue jobs and flush them on the next tick', async () => {
@@ -20,7 +20,7 @@ describe('Async Scheduling System', () => {
         queueJob(() => {
             job1Executed = true;
             expect(job1Executed).toBe(true);
-            expect(job2Executed).toBe(false); // Garantir que o job2 rode após o job1
+            expect(job2Executed).toBe(false);
         });
 
         queueJob(() => {
@@ -31,9 +31,8 @@ describe('Async Scheduling System', () => {
         expect(job1Executed).toBe(false);
         expect(job2Executed).toBe(false);
 
-        await nextTick(); // aguardar o próximo tick
+        await nextTick(); 
 
-        // Aqui garante que todos os jobs foram processados
         expect(job1Executed).toBe(true);
         expect(job2Executed).toBe(true);
     });
@@ -48,7 +47,7 @@ describe('Async Scheduling System', () => {
         queueJob(job);
         queueJob(job);
 
-        await nextTick(); // aguardar o próximo tick
+        await nextTick(); 
         expect(callCount).toBe(1);
     });
 });

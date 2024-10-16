@@ -2,7 +2,7 @@ let isFlushing = false;
 const queue: Function[] = [];
 const p = Promise.resolve();
 
-export const nextTick = (fn: () => void) => p.then(fn);
+export const nextTick = (fn?: () => void) => p.then(fn);
 
 export const queueJob = (job: Function) => {
     if (!queue.includes(job)) {

@@ -119,9 +119,7 @@ describe('createContext', () => {
         });
 
         reactiveScope.count = 1;
-
         await nextTick();
-
         expect(dummy).to.equal(1);
     });
 });

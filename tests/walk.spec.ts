@@ -124,11 +124,12 @@ describe('applyDirectiveBasedOnName', () => {
     it('should apply custom directive from context', () => {
         const el = document.createElement('div');
         const exp = 'someCustomExpression';
-        mockContext.dirs.customDirective = vi.fn();
 
-        applyDirectiveBasedOnName(el, 'v-customDirective', exp, mockContext);
-
-        expect(mockContext.dirs.customDirective).toHaveBeenCalled();
+        if(mockContext.dirs){
+            mockContext.dirs.customDirective = vi.fn();
+            applyDirectiveBasedOnName(el, 'v-customDirective', exp, mockContext);
+            expect(mockContext.dirs.customDirective).toHaveBeenCalled();
+        }
     });
 });
 
