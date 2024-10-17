@@ -17,7 +17,7 @@ describe('Expression Evaluation System', () => {
 
     it('should evaluate an expression using element context', () => {
         const scope = { a: 10 };
-        const element = document.createElement('div'); // Agora o `document` está disponível
+        const element = document.createElement('div');
         const result = evaluate(scope, 'a * 2', element);
         expect(result).toBe(20);
     });

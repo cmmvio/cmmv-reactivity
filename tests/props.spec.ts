@@ -28,10 +28,7 @@ describe('updateProps', () => {
             components: {}
         };
 
-        // Call updateProps to update the "name" property
         updateProps(ctx, 'name', 'updatedName');
-        
-        // Validate that the correct property is updated
         expect(mockComponent.name).toBe('updatedName');
     });
 
@@ -58,10 +55,7 @@ describe('updateProps', () => {
             components: {}
         };
 
-        // Call updateProps with a prop that doesn't match
         updateProps(ctx, 'nonExistentProp', 'someValue');
-        
-        // Validate that nothing was updated
         expect(mockComponent.name).toBe('');
     });
 
@@ -96,11 +90,9 @@ describe('updateProps', () => {
             components: {}
         };
 
-        // Update both components' props
         updateProps(ctx, 'name', 'newName');
         updateProps(ctx, 'value', 'newValue');
 
-        // Validate that both properties are updated
         expect(mockComponent1.name).toBe('newName');
         expect(mockComponent2.value).toBe('newValue');
     });
@@ -119,7 +111,6 @@ describe('updateProps', () => {
             components: {}
         };
 
-        // Call updateProps with no refs, expect no error
         expect(() => {
             updateProps(ctx, 'name', 'newName');
         }).not.toThrow();

@@ -124,7 +124,6 @@ describe('createContext', () => {
     });
 });
 
-
 describe('bindContextMethods', () => {
     it('should bind all functions in the scope to the scope itself', () => {
         const scope = {
