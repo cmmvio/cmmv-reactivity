@@ -1,3 +1,11 @@
+## [0.4.7](https://github.com/andrehrferreira/cmmv-reactivity/compare/v0.4.6...v0.4.7) (2024-11-27)
+
+### Features
+
+-   more tests ([1801d16](https://github.com/andrehrferreira/cmmv-reactivity/commit/1801d1699428ddb3091938c5f39ccf7b9035ef51))
+-   more tests ([98d1153](https://github.com/andrehrferreira/cmmv-reactivity/commit/98d115304a6148213b1a56f51d4b5c67a6cb2fd6))
+-   more tests ([88c42e2](https://github.com/andrehrferreira/cmmv-reactivity/commit/88c42e29531a1cb55ec6e05b7cf1415c81fa6421))
+
 ## [0.4.6](https://github.com/andrehrferreira/cmmv-reactivity/compare/v0.4.5...v0.4.6) (2024-10-15)
 
 ### Bug Fixes
