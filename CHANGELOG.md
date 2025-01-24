@@ -1,3 +1,9 @@
+## [0.4.8](https://github.com/cmmvio/cmmv-reactivity/compare/v0.4.7...v0.4.8) (2025-01-24)
+
+### Bug Fixes
+
+-   repository ([033eccc](https://github.com/cmmvio/cmmv-reactivity/commit/033ecccb5cd249aea297d5a778d4c8da08dc48f4))
+
 ## [0.4.7](https://github.com/cmmvio/cmmv-reactivity/compare/v0.4.6...v0.4.7) (2024-11-27)
 
 ### Features
